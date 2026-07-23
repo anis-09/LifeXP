@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — LifeXP{% endblock %}
+{% block meta_description %}Your LifeXP dashboard — track your level, XP, coins, and daily streak.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+  <!-- ================================================================
+       DASHBOARD NAVBAR
+  ================================================================ -->
+  <nav class="dashboard-navbar" role="navigation" aria-label="Dashboard Navigation">
+    <div class="container dashboard-navbar-inner">
+
+      <!-- Logo -->
+      <a href="{{ url_for('dashboard.index') }}" class="dash-logo" aria-label="LifeXP Dashboard">
+        <div class="dash-logo-icon" aria-hidden="true">⚡</div>
+        <span class="dash-logo-text">Life<span class="highlight">XP</span></span>
+      </a>
+
+      <!-- Right side -->
+      <div class="dash-nav-right">
+        <!-- Current date -->
+        <div class="dash-date" aria-label="Today's date">📅 {{ today }}</div>
+
+        <!-- User pill with dropdown -->
+        <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+          <div class="dash-user-avatar-small" aria-hidden="true">
+            {{ user.full_name[0].upper() }}
+          </div>
+          <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
+          <span aria-hidden="true">▾</span>
+
+          <!-- Dropdown -->
+          <div class="dash-user-dropdown" id="user-dropdown" role="menu">
+            <a href="{{ url_for('dashboard.index') }}" class="dropdown-item" role="menuitem">
+              👤 My Profile
+            </a>
+            <div class="divider" style="margin: var(--space-1) 0;"></div>
+            <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">
+              🚪 Logout
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ================================================================
+       MAIN CONTENT
+  ================================================================ -->
+  <main class="dashboard-main" id="main-content">
+    <div class="container">
+
+      <!-- ---- Welcome Header ----------------------------------------- -->
+      <section class="welcome-header" aria-label="Welcome">
+        <div class="welcome-greeting">
+          <span>👋</span> Good to see you again!
+        </div>
+        <h1 class="welcome-title">
+          Welcome back,
+          <span class="user-name">{{ user.full_name.split()[0] }}</span>!
+        </h1>
+        <p class="welcome-sub">
+          Today is <strong>{{ today }}</strong>. Keep pushing — your next level awaits.
+        </p>
+      </section>
+
+
+      <!-- ---- Top Stats Row ------------------------------------------ -->
+      <section class="stats-row" aria-label="Player Statistics">
+
+        <!-- Level -->
+        <div
+          class="stat-card stat-card-level glass-card animate-fade-in-up"
+          style="animation-delay: 0.05s;"
+        >
+          <div class="stat-card-header">
+            <span class="stat-card-label">Current Level</span>
+            <div class="stat-card-icon" aria-hidden="true">⭐</div>
+          </div>
+          <div class="stat-card-value" aria-label="Level {{ user.level }}">{{ user.level }}</div>
+          <div class="stat-card-sub">
+            {% if user.level < 10 %}
+              Apprentice Hero
+            {% elif user.level < 25 %}
+              Rising Adventurer
+            {% elif user.level < 50 %}
+              Seasoned Champion
+            {% else %}
+              Legendary Master
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- XP -->
+        <div
+          class="stat-card stat-card-xp glass-card animate-fade-in-up"
+          style="animation-delay: 0.15s;"
+        >
+          <div class="stat-card-header">
+            <span class="stat-card-label">Experience Points</span>
+            <div class="stat-card-icon" aria-hidden="true">⚡</div>
+          </div>
+          <div class="stat-card-value" aria-label="{{ user.xp }} XP">{{ user.xp }}</div>
+          <div class="stat-card-sub">{{ xp_progress }}% to Level {{ user.level + 1 }}</div>
+        </div>
+
+        <!-- Coins -->
+        <div
+          class="stat-card stat-card-coins glass-card animate-fade-in-up"
+          style="animation-delay: 0.25s;"
+        >
+          <div class="stat-card-header">
+            <span class="stat-card-label">Coins</span>
+            <div class="stat-card-icon" aria-hidden="true">💰</div>
+          </div>
+          <div class="stat-card-value" aria-label="{{ user.coins }} coins">{{ user.coins }}</div>
+          <div class="stat-card-sub">Available to spend</div>
+        </div>
+
+        <!-- Streak -->
+        <div
+          class="stat-card stat-card-streak glass-card animate-fade-in-up"
+          style="animation-delay: 0.35s;"
+        >
+          <div class="stat-card-header">
+            <span class="stat-card-label">Daily Streak</span>
+            <div class="stat-card-icon" aria-hidden="true">🔥</div>
+          </div>
+          <div class="stat-card-value" aria-label="{{ user.streak }} day streak">{{ user.streak }}</div>
+          <div class="stat-card-sub">
+            {% if user.streak == 0 %}
+              Start your streak today!
+            {% elif user.streak == 1 %}
+              1 day — keep going!
+            {% else %}
+              Day streak 🔥
+            {% endif %}
+          </div>
+        </div>
+
+      </section><!-- /stats-row -->
+
+
+      <!-- ---- Second Row --------------------------------------------- -->
+      <div class="dashboard-second-row">
+
+        <!-- Profile Card -->
+        <article class="profile-card glass-card animate-fade-in-up" style="animation-delay: 0.4s;" aria-label="Player Profile">
+
+          <div class="profile-card-header">
+            <!-- Animated avatar ring -->
+            <div class="profile-avatar-wrapper" aria-hidden="true">
+              <div class="profile-avatar-ring"></div>
+              <div class="profile-avatar-ring-inner"></div>
+              <div class="profile-avatar">{{ user.full_name[0].upper() }}</div>
+            </div>
+
+            <div class="profile-info">
+              <h2 class="profile-name">{{ user.full_name }}</h2>
+              <p class="profile-email">{{ user.email }}</p>
+              <div class="profile-level-badge">
+                ⭐ Level {{ user.level }}
+                —
+                {% if user.level < 10 %}
+                  Apprentice
+                {% elif user.level < 25 %}
+                  Adventurer
+                {% elif user.level < 50 %}
+                  Champion
+                {% else %}
+                  Master
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- XP Progress Bar -->
+          <div class="profile-xp-section" aria-label="XP Progress">
+            <div class="profile-xp-header">
+              <span class="profile-xp-title">XP Progress to Level {{ user.level + 1 }}</span>
+              <span class="profile-xp-values">
+                <span>{{ user.xp }}</span> / {{ xp_needed }} XP
+              </span>
+            </div>
+            <div class="xp-bar-track" role="progressbar" aria-valuenow="{{ xp_progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ xp_progress }}% XP to next level">
+              <div
+                class="xp-bar-fill"
+                id="xp-bar"
+                style="width: 0%;"
+                data-width="{{ xp_progress }}"
+              ></div>
+            </div>
+            <div class="profile-xp-percent">{{ xp_progress }}% complete</div>
+          </div>
+
+          <!-- Mini stats row -->
+          <div class="profile-mini-stats">
+            <div class="profile-mini-stat">
+              <div class="profile-mini-stat-icon" aria-hidden="true">⭐</div>
+              <div class="profile-mini-stat-value">{{ user.level }}</div>
+              <div class="profile-mini-stat-label">Level</div>
+            </div>
+            <div class="profile-mini-stat">
+              <div class="profile-mini-stat-icon" aria-hidden="true">💰</div>
+              <div class="profile-mini-stat-value">{{ user.coins }}</div>
+              <div class="profile-mini-stat-label">Coins</div>
+            </div>
+            <div class="profile-mini-stat">
+              <div class="profile-mini-stat-icon" aria-hidden="true">🔥</div>
+              <div class="profile-mini-stat-value">{{ user.streak }}</div>
+              <div class="profile-mini-stat-label">Streak</div>
+            </div>
+          </div>
+
+        </article><!-- /profile-card -->
+
+
+        <!-- Activity / Streak Card -->
+        <article class="activity-card glass-card animate-fade-in-up" style="animation-delay: 0.5s;" aria-label="Activity and Streak">
+
+          <h2 class="card-section-title">
+            <span class="card-section-title-icon" aria-hidden="true">📅</span>
+            Weekly Streak
+          </h2>
+
+          <!-- Simple 7-day streak visual -->
+          <div class="streak-week" aria-label="7 day streak overview">
+            {% set days = ['M','T','W','T','F','S','S'] %}
+            {% for i in range(7) %}
+              <div class="streak-day {% if loop.index == 7 %}today{% elif loop.index <= user.streak %}active{% endif %}" aria-label="Day {{ i + 1 }}">
+                <span>{{ days[i] }}</span>
+                <span>{% if loop.index == 7 %}⚡{% elif loop.index <= user.streak %}✓{% else %}·{% endif %}</span>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Quick stat cards -->
+          <div class="activity-quick-stats">
+            <div class="activity-stat">
+              <div class="activity-stat-label">Total XP Earned</div>
+              <div class="activity-stat-value purple">{{ user.xp }}</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-label">Coins Collected</div>
+              <div class="activity-stat-value gold">{{ user.coins }}</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-label">Current Level</div>
+              <div class="activity-stat-value cyan">{{ user.level }}</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-label">Day Streak</div>
+              <div class="activity-stat-value purple">{{ user.streak }} 🔥</div>
+            </div>
+          </div>
+
+          <!-- Getting started prompt -->
+          <div class="getting-started">
+            <div class="getting-started-title">🗺️ Begin Your Quest</div>
+            <div class="getting-started-text">
+              Missions, leaderboards, and your AI Coach are coming in your next
+              adventure module. Stay tuned and keep levelling up!
+            </div>
+          </div>
+
+        </article><!-- /activity-card -->
+
+      </div><!-- /dashboard-second-row -->
+
+    </div><!-- /container -->
+  </main>
+
+</div><!-- /dashboard-page -->
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

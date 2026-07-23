@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block title %}LifeXP — Gamify Your Life{% endblock %}
+{% block meta_description %}LifeXP turns your daily goals into an epic RPG adventure. Earn XP, level up, collect coins, and become the hero of your own story.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================
+     NAVIGATION
+================================================================ -->
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main Navigation">
+  <div class="container navbar-inner">
+
+    <!-- Logo -->
+    <a href="{{ url_for('main.landing') }}" class="navbar-logo" aria-label="LifeXP Home">
+      <div class="navbar-logo-icon" aria-hidden="true">⚡</div>
+      <span class="navbar-logo-text">Life<span class="highlight">XP</span></span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="navbar-links" id="navbar-links" role="list">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#cta">Get Started</a></li>
+    </ul>
+
+    <!-- Desktop CTA buttons -->
+    <div class="navbar-cta">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-sm" id="nav-login-btn">Login</a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm" id="nav-register-btn">Get Started</a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle Menu" aria-expanded="false" aria-controls="navbar-links">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+</nav>
+
+
+<!-- ================================================================
+     HERO SECTION
+================================================================ -->
+<section class="hero" id="hero" aria-label="Hero">
+  <div class="container">
+    <div class="hero-content">
+
+      <!-- Text Side -->
+      <div class="hero-text-wrapper">
+        <div class="hero-eyebrow">
+          <span class="badge badge-purple">🎮 RPG-Powered Life System</span>
+        </div>
+
+        <h1 class="hero-title">
+          Level Up<br />
+          <span class="line-gradient">Your Real Life</span>
+        </h1>
+
+        <p class="hero-description">
+          LifeXP turns your daily habits, goals, and achievements into an epic
+          RPG adventure. Earn XP, gain levels, collect coins, and become the
+          hero of your own story — starting today.
+        </p>
+
+        <div class="hero-actions">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-xl" id="hero-start-btn">
+            🚀 Start Your Journey
+          </a>
+          <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-xl" id="hero-login-btn">
+            Login
+          </a>
+        </div>
+
+        <div class="hero-social-proof">
+          <div class="hero-avatars" aria-hidden="true">
+            <div class="hero-avatar">A</div>
+            <div class="hero-avatar">J</div>
+            <div class="hero-avatar">M</div>
+            <div class="hero-avatar">K</div>
+          </div>
+          <p class="hero-social-text">
+            <strong>500+</strong> adventurers already levelling up
+          </p>
+        </div>
+      </div>
+
+      <!-- Visual / Demo Card Side -->
+      <div class="hero-visual" aria-hidden="true">
+
+        <!-- Floating badge decorations -->
+        <div class="hero-badge hero-badge-1">
+          <span class="hero-badge-icon">⚔️</span>
+          <span>+120 XP Earned</span>
+        </div>
+        <div class="hero-badge hero-badge-2">
+          <span class="hero-badge-icon">🔥</span>
+          <span>14-Day Streak!</span>
+        </div>
+
+        <!-- Demo card -->
+        <div class="hero-card">
+          <div class="hero-card-inner">
+
+            <!-- User row -->
+            <div class="card-user-row">
+              <div class="card-avatar">🦸</div>
+              <div class="card-user-info">
+                <h3>Alex Hero</h3>
+                <div class="level-tag">⭐ Level 12 — Adventurer</div>
+              </div>
+            </div>
+
+            <!-- XP bar -->
+            <div class="card-xp-section">
+              <div class="card-xp-label">
+                <span>Experience Points</span>
+                <span>680 / 1200 XP</span>
+              </div>
+              <div class="card-xp-bar-track">
+                <div class="card-xp-bar-fill"></div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="card-stats">
+              <div class="card-stat">
+                <div class="card-stat-icon">⚡</div>
+                <div class="card-stat-value">12</div>
+                <div class="card-stat-label">Level</div>
+              </div>
+              <div class="card-stat">
+                <div class="card-stat-icon">💰</div>
+                <div class="card-stat-value">840</div>
+                <div class="card-stat-label">Coins</div>
+              </div>
+              <div class="card-stat">
+                <div class="card-stat-icon">🔥</div>
+                <div class="card-stat-value">14</div>
+                <div class="card-stat-label">Streak</div>
+              </div>
+            </div>
+
+            <!-- Mini Quest -->
+            <div class="card-quest">
+              <div class="card-quest-header">📋 Active Quest</div>
+              <div class="card-quest-text">Exercise for 30 minutes</div>
+              <div class="card-quest-progress-track">
+                <div class="card-quest-progress-fill"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Glow decorations -->
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+
+      </div><!-- /hero-visual -->
+    </div><!-- /hero-content -->
+  </div>
+</section>
+
+
+<!-- ================================================================
+     INTRO STATS STRIP
+================================================================ -->
+<section class="intro-strip" aria-label="Platform Statistics">
+  <div class="container">
+    <div class="intro-strip-grid">
+      <div class="reveal">
+        <div class="intro-stat-number">500+</div>
+        <div class="intro-stat-label">Active Adventurers</div>
+      </div>
+      <div class="reveal delay-100">
+        <div class="intro-stat-number">10K+</div>
+        <div class="intro-stat-label">Quests Completed</div>
+      </div>
+      <div class="reveal delay-200">
+        <div class="intro-stat-number">50K+</div>
+        <div class="intro-stat-label">XP Points Earned</div>
+      </div>
+      <div class="reveal delay-300">
+        <div class="intro-stat-number">99%</div>
+        <div class="intro-stat-label">Satisfaction Rate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     FEATURES SECTION
+================================================================ -->
+<section class="features section" id="features" aria-label="Features">
+  <div class="container">
+
+    <header class="section-header">
+      <span class="section-eyebrow">✨ Why LifeXP?</span>
+      <h2 class="section-title">
+        Everything You Need to<br />
+        <span class="gradient-text">Level Up Your Life</span>
+      </h2>
+      <p class="section-subtitle">
+        A complete gamification system built to turn your daily routine into
+        an adventure worth living.
+      </p>
+    </header>
+
+    <div class="features-grid">
+
+      <div class="feature-card glass-card glass-card-hover reveal">
+        <div class="feature-icon-wrapper feature-icon-bg-purple">⚡</div>
+        <h3 class="feature-title">XP & Levelling System</h3>
+        <p class="feature-desc">
+          Earn experience points for every completed task and habit.
+          Watch your level rise as you grow in real life — just like
+          your favourite RPG.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card glass-card-hover reveal delay-100">
+        <div class="feature-icon-wrapper feature-icon-bg-gold">💰</div>
+        <h3 class="feature-title">Coins & Rewards</h3>
+        <p class="feature-desc">
+          Collect in-app coins for your achievements. Spend them in the
+          shop to unlock avatars, themes, and power-ups that make your
+          journey unique.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card glass-card-hover reveal delay-200">
+        <div class="feature-icon-wrapper feature-icon-bg-pink">🔥</div>
+        <h3 class="feature-title">Daily Streaks</h3>
+        <p class="feature-desc">
+          Build momentum with daily streaks. The longer your streak,
+          the bigger your XP multiplier. Miss a day? Epic items can
+          protect your streak.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card glass-card-hover reveal">
+        <div class="feature-icon-wrapper feature-icon-bg-cyan">📋</div>
+        <h3 class="feature-title">Mission System</h3>
+        <p class="feature-desc">
+          Tackle daily, weekly, and epic missions. Each mission is
+          crafted to push you toward your goals with clear objectives
+          and meaningful rewards.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card glass-card-hover reveal delay-100">
+        <div class="feature-icon-wrapper feature-icon-bg-green">🏆</div>
+        <h3 class="feature-title">Leaderboards</h3>
+        <p class="feature-desc">
+          Compete with friends and a global community. See where you
+          rank, celebrate your wins, and get inspired by those ahead
+          of you.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card glass-card-hover reveal delay-200">
+        <div class="feature-icon-wrapper feature-icon-bg-blue">🤖</div>
+        <h3 class="feature-title">AI Life Coach</h3>
+        <p class="feature-desc">
+          Your personal AI coach analyses your progress and delivers
+          personalised missions, strategies, and motivation to keep you
+          levelling up, always.
+        </p>
+      </div>
+
+    </div><!-- /features-grid -->
+  </div>
+</section>
+
+
+<!-- ================================================================
+     HOW IT WORKS
+================================================================ -->
+<section class="how-it-works section" id="how-it-works" aria-label="How LifeXP Works">
+  <div class="container">
+
+    <header class="section-header">
+      <span class="section-eyebrow">🗺️ Your Journey</span>
+      <h2 class="section-title">
+        How <span class="gradient-text">LifeXP</span> Works
+      </h2>
+      <p class="section-subtitle">
+        Four simple steps to transform your everyday life into an epic quest.
+      </p>
+    </header>
+
+    <div class="steps-grid">
+
+      <div class="step-card glass-card reveal">
+        <div class="step-number" aria-hidden="true">
+          <span class="step-icon">📝</span>
+        </div>
+        <h3 class="step-title">Create Your Hero</h3>
+        <p class="step-desc">
+          Sign up and build your character. Your adventure begins with
+          Level 1 and 0 XP — a blank slate for greatness.
+        </p>
+      </div>
+
+      <div class="step-card glass-card reveal delay-200">
+        <div class="step-number" aria-hidden="true">
+          <span class="step-icon">⚔️</span>
+        </div>
+        <h3 class="step-title">Accept Missions</h3>
+        <p class="step-desc">
+          Pick from daily and weekly missions aligned to your goals —
+          fitness, learning, productivity, creativity, and more.
+        </p>
+      </div>
+
+      <div class="step-card glass-card reveal delay-300">
+        <div class="step-number" aria-hidden="true">
+          <span class="step-icon">💎</span>
+        </div>
+        <h3 class="step-title">Earn Rewards</h3>
+        <p class="step-desc">
+          Complete missions to earn XP and Coins. Watch your level soar
+          and unlock rare rewards, badges, and power-ups.
+        </p>
+      </div>
+
+      <div class="step-card glass-card reveal delay-400">
+        <div class="step-number" aria-hidden="true">
+          <span class="step-icon">🏆</span>
+        </div>
+        <h3 class="step-title">Dominate the Board</h3>
+        <p class="step-desc">
+          Climb the leaderboard, challenge friends, and prove that
+          you're the ultimate LifeXP champion in your community.
+        </p>
+      </div>
+
+    </div><!-- /steps-grid -->
+  </div>
+</section>
+
+
+<!-- ================================================================
+     CALL TO ACTION
+================================================================ -->
+<section class="cta-section section" id="cta" aria-label="Call To Action">
+  <div class="container">
+    <div class="cta-card reveal">
+      <div class="badge badge-purple" style="margin-bottom: 1.5rem; display: inline-flex;">
+        🎮 Free to Join
+      </div>
+      <h2 class="cta-title">
+        Ready to Become<br />
+        <span class="gradient-text">Your Best Self?</span>
+      </h2>
+      <p class="cta-subtitle">
+        Join hundreds of adventurers already levelling up their lives.<br />
+        Your quest starts with a single step.
+      </p>
+      <div class="cta-actions">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-xl" id="cta-register-btn">
+          ⚡ Create Free Account
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-xl" id="cta-login-btn">
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+
+    <div class="footer-top">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <a href="{{ url_for('main.landing') }}" class="navbar-logo" aria-label="LifeXP Home">
+          <div class="navbar-logo-icon" aria-hidden="true">⚡</div>
+          <span class="navbar-logo-text" style="font-size: 1.125rem;">Life<span class="highlight">XP</span></span>
+        </a>
+        <p>Gamify your life. Turn habits into quests. Earn XP for every achievement. Become the hero of your own story.</p>
+      </div>
+
+      <!-- Product -->
+      <nav aria-label="Product Links">
+        <p class="footer-col-title">Product</p>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Get Started</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+        </ul>
+      </nav>
+
+      <!-- Resources -->
+      <nav aria-label="Resource Links">
+        <p class="footer-col-title">Resources</p>
+        <ul class="footer-links">
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </nav>
+
+      <!-- Company -->
+      <nav aria-label="Company Links">
+        <p class="footer-col-title">Company</p>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <p>© 2026 LifeXP. All rights reserved. Built with ⚡ and ❤️</p>
+      <div class="footer-socials" aria-label="Social Links">
+        <button class="footer-social-btn" aria-label="Twitter">𝕏</button>
+        <button class="footer-social-btn" aria-label="Discord">💬</button>
+        <button class="footer-social-btn" aria-label="GitHub">🐙</button>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+{% endblock %}

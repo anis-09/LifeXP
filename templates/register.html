@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account — LifeXP{% endblock %}
+{% block meta_description %}Join LifeXP and start your RPG-powered life journey. Create your free account today.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<main class="auth-page" id="main-content">
+  <div class="auth-wrapper animate-fade-in-up">
+
+    <!-- Back to home -->
+    <a href="{{ url_for('main.landing') }}" class="auth-back" aria-label="Back to home">
+      ← Back to Home
+    </a>
+
+    <!-- Card -->
+    <div class="auth-card glass-card">
+
+      <!-- Header -->
+      <header class="auth-header">
+        <a href="{{ url_for('main.landing') }}" class="auth-logo" aria-label="LifeXP Home">
+          <div class="auth-logo-icon" aria-hidden="true">⚡</div>
+          <span class="auth-logo-text">Life<span class="highlight">XP</span></span>
+        </a>
+        <h1 class="auth-title">Create Your Hero</h1>
+        <p class="auth-subtitle">Begin your epic journey — it's free forever.</p>
+      </header>
+
+      <!-- Error banner (server-side) -->
+      {% if error %}
+        <div class="auth-alert auth-alert-error" role="alert" aria-live="assertive">
+          <span class="auth-alert-icon" aria-hidden="true">❌</span>
+          <span>{{ error }}</span>
+        </div>
+      {% endif %}
+
+      <!-- Registration Form -->
+      <form
+        class="auth-form"
+        id="register-form"
+        method="POST"
+        action="{{ url_for('auth.register') }}"
+        novalidate
+        aria-label="Registration Form"
+      >
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="full_name">Full Name</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">👤</span>
+            <input
+              type="text"
+              id="full_name"
+              name="full_name"
+              class="form-input"
+              placeholder="Alex Hero"
+              value="{{ form_data.get('full_name', '') }}"
+              autocomplete="name"
+              required
+              aria-required="true"
+              aria-describedby="full_name_hint"
+            />
+          </div>
+          <span class="form-hint" id="full_name_hint" aria-live="polite"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">✉️</span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="hero@example.com"
+              value="{{ form_data.get('email', '') }}"
+              autocomplete="email"
+              required
+              aria-required="true"
+              aria-describedby="email_hint"
+            />
+          </div>
+          <span class="form-hint" id="email_hint" aria-live="polite"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">🔒</span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Create a strong password"
+              autocomplete="new-password"
+              required
+              aria-required="true"
+              aria-describedby="password_hint password_strength_label"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              id="toggle-password"
+              aria-label="Show/Hide Password"
+              aria-pressed="false"
+            >👁️</button>
+          </div>
+
+          <!-- Strength bars -->
+          <div class="password-strength" id="password-strength" aria-hidden="true">
+            <div class="strength-bars">
+              <div class="strength-bar" id="bar-1"></div>
+              <div class="strength-bar" id="bar-2"></div>
+              <div class="strength-bar" id="bar-3"></div>
+              <div class="strength-bar" id="bar-4"></div>
+            </div>
+            <span class="strength-label" id="strength-label"></span>
+          </div>
+          <span class="form-hint" id="password_hint" aria-live="polite">
+            Min 8 chars · Uppercase · Lowercase · Number · Special character
+          </span>
+          <span class="sr-only" id="password_strength_label" aria-live="polite"></span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">🔒</span>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              class="form-input"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+              required
+              aria-required="true"
+              aria-describedby="confirm_hint"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              id="toggle-confirm"
+              aria-label="Show/Hide Confirm Password"
+              aria-pressed="false"
+            >👁️</button>
+          </div>
+          <span class="form-hint" id="confirm_hint" aria-live="polite"></span>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="auth-submit"
+          id="register-submit"
+          aria-label="Create Account"
+        >
+          <span class="btn-text">⚡ Create Account</span>
+          <div class="btn-spinner" aria-hidden="true"></div>
+        </button>
+
+      </form>
+
+      <!-- Footer link -->
+      <p class="auth-footer-text">
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}" id="go-to-login">Login here</a>
+      </p>
+
+    </div><!-- /auth-card -->
+  </div><!-- /auth-wrapper -->
+</main>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

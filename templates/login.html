@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Login — LifeXP{% endblock %}
+{% block meta_description %}Log in to your LifeXP account and continue your epic adventure.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<main class="auth-page" id="main-content">
+  <div class="auth-wrapper animate-fade-in-up">
+
+    <!-- Back to home -->
+    <a href="{{ url_for('main.landing') }}" class="auth-back" aria-label="Back to home">
+      ← Back to Home
+    </a>
+
+    <!-- Card -->
+    <div class="auth-card glass-card">
+
+      <!-- Header -->
+      <header class="auth-header">
+        <a href="{{ url_for('main.landing') }}" class="auth-logo" aria-label="LifeXP Home">
+          <div class="auth-logo-icon" aria-hidden="true">⚡</div>
+          <span class="auth-logo-text">Life<span class="highlight">XP</span></span>
+        </a>
+        <h1 class="auth-title">Welcome Back, Hero</h1>
+        <p class="auth-subtitle">Your adventure awaits. Login to continue.</p>
+      </header>
+
+      <!-- Error banner (server-side) -->
+      {% if error %}
+        <div class="auth-alert auth-alert-error" role="alert" aria-live="assertive">
+          <span class="auth-alert-icon" aria-hidden="true">❌</span>
+          <span>{{ error }}</span>
+        </div>
+      {% endif %}
+
+      <!-- Login Form -->
+      <form
+        class="auth-form"
+        id="login-form"
+        method="POST"
+        action="{{ url_for('auth.login') }}"
+        novalidate
+        aria-label="Login Form"
+      >
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">✉️</span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="hero@example.com"
+              value="{{ email_value }}"
+              autocomplete="email"
+              required
+              aria-required="true"
+              aria-describedby="email_hint"
+            />
+          </div>
+          <span class="form-hint" id="email_hint" aria-live="polite"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-wrapper">
+            <span class="form-input-icon" aria-hidden="true">🔒</span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Your password"
+              autocomplete="current-password"
+              required
+              aria-required="true"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              id="toggle-password"
+              aria-label="Show/Hide Password"
+              aria-pressed="false"
+            >👁️</button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="auth-submit"
+          id="login-submit"
+          aria-label="Login"
+        >
+          <span class="btn-text">🚀 Login to LifeXP</span>
+          <div class="btn-spinner" aria-hidden="true"></div>
+        </button>
+
+      </form>
+
+      <!-- Footer link -->
+      <p class="auth-footer-text">
+        Don't have an account?
+        <a href="{{ url_for('auth.register') }}" id="go-to-register">Create one free</a>
+      </p>
+
+    </div><!-- /auth-card -->
+  </div><!-- /auth-wrapper -->
+</main>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

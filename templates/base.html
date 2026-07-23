@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta -->
+  <meta name="description" content="{% block meta_description %}LifeXP — Gamify your life. Earn XP, level up, and conquer your goals.{% endblock %}" />
+  <meta name="theme-color" content="#0a0a0f" />
+
+  <title>{% block title %}LifeXP{% endblock %}</title>
+
+  <!-- Favicon (emoji fallback) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Design System CSS (load order matters) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+
+  <!-- Page-specific CSS -->
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  <!-- Background decorative orbs -->
+  <div class="bg-orb bg-orb-purple" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-cyan"   aria-hidden="true"></div>
+
+  <!-- Flash messages (server-side) -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container" id="flash-container" role="alert" aria-live="polite">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">
+            {% if category == 'success' %}✅{% elif category == 'error' %}❌{% else %}ℹ️{% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Page Content -->
+  <div class="page-content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Base JS (auto-dismiss flash messages) -->
+  <script>
+    // Auto-dismiss flash messages after 4 seconds
+    setTimeout(function () {
+      var container = document.getElementById('flash-container');
+      if (container) {
+        container.style.transition = 'opacity 0.4s ease';
+        container.style.opacity = '0';
+        setTimeout(function () { container.remove(); }, 400);
+      }
+    }, 4000);
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
