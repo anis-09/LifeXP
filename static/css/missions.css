@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mission-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.mission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.mission-header h1 {
+    font-size: 42px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.mission-header p {
+    color: #bdbdbd;
+}
+
+.create-btn {
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    color: white;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.create-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, .25);
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 25px;
+}
+
+.mission-card {
+    background: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 18px;
+    padding: 25px;
+    transition: .3s;
+}
+
+.mission-card:hover {
+    transform: translateY(-6px);
+    border-color: #7c3aed;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-top h2 {
+    color: white;
+    font-size: 24px;
+}
+
+.daily-tag {
+    background: #22c55e;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.description {
+    color: #cfcfcf;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.category,
+.difficulty {
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.category {
+    background: #4f46e5;
+    color: white;
+}
+
+.easy {
+    background: #16a34a;
+    color: white;
+}
+
+.medium {
+    background: #f59e0b;
+    color: white;
+}
+
+.hard {
+    background: #ef4444;
+    color: white;
+}
+
+.reward-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.reward {
+    color: white;
+    font-weight: 700;
+}
+
+.card-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.complete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #22c55e;
+    color: white;
+    font-weight: bold;
+}
+
+.delete-btn {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    background: #ef4444;
+    color: white;
+    font-weight: bold;
+}
+
+.empty-state {
+    text-align: center;
+    margin-top: 90px;
+}
+
+.empty-icon {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.empty-state h2 {
+    color: white;
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    color: #cfcfcf;
+    margin-bottom: 30px;
+}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Mission
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create_mission.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="create-page">
+
+    <div class="create-card">
+
+        <div class="header">
+
+            <h1>🎯 Create New Mission</h1>
+
+            <p>
+                Build your next quest and earn XP by completing it.
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label>Mission Title</label>
+
+                <input type="text" name="title" placeholder="Example: Complete Flask Course" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea name="description" rows="5" placeholder="Describe your mission..." required></textarea>
+
+            </div>
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select name="category_id">
+
+                        {% for category in categories %}
+
+                        <option value="{{ category.id }}">
+                            {{ category.name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Difficulty</label>
+
+                    <select name="difficulty">
+
+                        <option>Easy</option>
+                        <option>Medium</option>
+                        <option>Hard</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>XP Reward</label>
+
+                    <input type="number" name="xp_reward" value="100">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Coin Reward</label>
+
+                    <input type="number" name="coin_reward" value="25">
+
+                </div>
+
+            </div>
+
+            <div class="checkbox">
+
+                <input type="checkbox" id="daily" name="is_daily">
+
+                <label for="daily">
+
+                    Daily Mission
+
+                </label>
+
+            </div>
+
+            <button class="submit-btn" type="submit">
+
+                🚀 Create Mission
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

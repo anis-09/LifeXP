@@ -1,6 +1,6 @@
 """
 database/db.py
----------------------------------
+--------------
 LifeXP Database Manager
 """
 
@@ -13,7 +13,7 @@ from config import DATABASE_PATH
 
 def get_connection():
     """
-    Create a new SQLite connection.
+    Create and return a SQLite connection.
     """
 
     DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -51,15 +51,23 @@ def close_db(e=None):
 
 def initialize_database():
     """
-    Create all tables from schema.sql.
+    Create database schema and insert default seed data.
     """
 
-    schema_path = Path(__file__).parent / "schema.sql"
+    connection = get_connection()
 
-    with get_connection() as connection:
+    database_dir = Path(__file__).parent
 
-        with open(schema_path, "r", encoding="utf-8") as file:
+    schema_file = database_dir / "schema.sql"
+    seed_file = database_dir / "seed.sql"
 
-            connection.executescript(file.read())
+    # Create tables
+    with open(schema_file, "r", encoding="utf-8") as file:
+        connection.executescript(file.read())
 
-        connection.commit()
+    # Insert default data
+    with open(seed_file, "r", encoding="utf-8") as file:
+        connection.executescript(file.read())
+
+    connection.commit()
+    connection.close()

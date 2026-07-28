@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}
+Mission Center
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/missions.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="mission-container">
+
+    <div class="mission-header">
+
+        <div>
+
+            <h1>🎯 Mission Center</h1>
+
+            <p>
+                Complete missions, earn XP, collect coins and level up.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('missions.create') }}" class="create-btn">
+
+            + Create Mission
+
+        </a>
+
+    </div>
+
+    {% if missions %}
+
+    <div class="mission-grid">
+
+        {% for mission in missions %}
+
+        <div class="mission-card">
+
+            <div class="card-top">
+
+                <h2>{{ mission.title }}</h2>
+
+                {% if mission.is_daily %}
+                <span class="daily-tag">
+                    Daily
+                </span>
+                {% endif %}
+
+            </div>
+
+            <p class="description">
+
+                {{ mission.description }}
+
+            </p>
+
+            <div class="badges">
+
+                <span class="category">
+
+                    {{ mission.category_name }}
+
+                </span>
+
+                <span class="difficulty {{ mission.difficulty|lower }}">
+
+                    {{ mission.difficulty }}
+
+                </span>
+
+            </div>
+
+            <div class="reward-row">
+
+                <div class="reward">
+
+                    ⭐ {{ mission.xp_reward }} XP
+
+                </div>
+
+                <div class="reward">
+
+                    🪙 {{ mission.coin_reward }} Coins
+
+                </div>
+
+            </div>
+
+            <div class="card-actions">
+
+                <button class="complete-btn">
+
+                    Complete
+
+                </button>
+
+                <a href="{{ url_for('missions.delete', mission_id=mission.id) }}" class="delete-btn"
+                    onclick="return confirm('Delete this mission?')">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+
+            🚀
+
+        </div>
+
+        <h2>
+
+            No Missions Yet
+
+        </h2>
+
+        <p>
+
+            Create your first mission and start earning XP.
+
+        </p>
+
+        <a href="{{ url_for('missions.create') }}" class="create-btn">
+
+            Create First Mission
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/missions.js') }}"></script>
+{% endblock %}
