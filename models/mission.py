@@ -78,6 +78,31 @@ class MissionModel:
         ).fetchall()
 
     @staticmethod
+    def get_daily():
+        """
+        Return all daily mission templates.
+        """
+
+        db = get_db()
+
+        return db.execute(
+            """
+            SELECT
+                missions.*,
+                mission_categories.name AS category_name,
+                mission_categories.icon,
+                mission_categories.color
+            FROM missions
+            INNER JOIN mission_categories
+                ON mission_categories.id = missions.category_id
+            WHERE missions.is_daily = 1
+            ORDER BY
+                missions.created_at ASC,
+                missions.id ASC
+            """
+        ).fetchall()
+
+    @staticmethod
     def get_by_id(mission_id):
         """Return a single mission."""
 
