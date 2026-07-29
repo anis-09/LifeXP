@@ -44,7 +44,6 @@ def create():
     Create a new mission.
     """
 
-    # User must be logged in
     if "user_id" not in session:
 
         flash(
@@ -83,9 +82,8 @@ def create():
                 "error"
             )
 
-        except Exception as e:
-
-            raise e
+        except Exception:
+            raise
 
     return render_template(
         "create_mission.html",
@@ -129,9 +127,8 @@ def complete(mission_id):
             "error"
         )
 
-    except Exception as e:
-
-        raise e
+    except Exception:
+        raise
 
     return redirect(
         url_for("missions.index")
@@ -144,14 +141,38 @@ def delete(mission_id):
     Delete a mission.
     """
 
-    MissionService.delete_mission(
-        mission_id
-    )
+    if "user_id" not in session:
 
-    flash(
-        "🗑️ Mission deleted successfully!",
-        "success"
-    )
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+    try:
+
+        MissionService.delete_mission(
+            mission_id=mission_id,
+            user_id=session["user_id"]
+        )
+
+        flash(
+            "🗑️ Mission deleted successfully!",
+            "success"
+        )
+
+    except ValueError as error:
+
+        flash(
+            str(error),
+            "error"
+        )
+
+    except Exception:
+        raise
 
     return redirect(
         url_for("missions.index")

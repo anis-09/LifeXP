@@ -6,7 +6,7 @@ Business logic for authentication:
 - login_user()     — validate credentials + start session
 """
 
-from models.user import create_user, get_user_by_email, email_exists, verify_password
+from models.user import create_user, get_user_by_email, email_exists, verify_password, update_last_login
 from models.user_stats import UserStatsModel
 from utils.validators import (
     validate_full_name,
@@ -66,5 +66,7 @@ def login_user(email: str, password: str):
 
     if not verify_password(user['password_hash'], password):
         return False, "Invalid email or password.", None
+
+    update_last_login(user['id'])
 
     return True, "Login successful.", user

@@ -56,3 +56,13 @@ def email_exists(email: str) -> bool:
 def verify_password(stored_hash: str, password: str) -> bool:
     """Compare a plain-text password against the stored hash."""
     return check_password_hash(stored_hash, password)
+
+
+def update_last_login(user_id: int) -> None:
+    """Set users.last_login to the current timestamp for the given user."""
+    db = get_db()
+    db.execute(
+        "UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?",
+        (user_id,)
+    )
+    db.commit()

@@ -113,10 +113,20 @@ class MissionService:
         return mission
 
     @staticmethod
-    def delete_mission(mission_id):
+    def delete_mission(mission_id, user_id):
         """
-        Delete a mission.
+        Delete a mission after verifying the requester owns it.
+        Raises ValueError if the mission does not exist or is not owned
+        by user_id.
         """
+        mission = MissionModel.get_by_id(mission_id)
+
+        if mission is None:
+            raise ValueError("Mission not found.")
+
+        if mission["created_by"] != user_id:
+            raise ValueError("You do not have permission to delete this mission.")
+
         MissionModel.delete(mission_id)
 
     @staticmethod

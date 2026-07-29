@@ -119,6 +119,8 @@ CREATE TABLE IF NOT EXISTS user_missions (
 
     progress INTEGER DEFAULT 0,
 
+    assignment_date DATE NOT NULL DEFAULT (DATE('now')),
+
     assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     completed_at TIMESTAMP,
@@ -294,3 +296,17 @@ ON xp_transactions(user_id);
 
 CREATE INDEX IF NOT EXISTS idx_coin_transactions_user
 ON coin_transactions(user_id);
+
+--------------------------------------------------
+-- DAILY MISSION INDEXES
+--------------------------------------------------
+
+CREATE INDEX IF NOT EXISTS idx_missions_daily
+ON missions(is_daily);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_daily_assignment
+ON user_missions(
+    user_id,
+    mission_id,
+    assignment_date
+);

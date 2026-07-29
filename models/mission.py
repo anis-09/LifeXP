@@ -69,10 +69,8 @@ class MissionModel:
                 mission_categories.icon,
                 mission_categories.color
             FROM missions
-
             INNER JOIN mission_categories
                 ON mission_categories.id = missions.category_id
-
             ORDER BY
                 missions.created_at DESC,
                 missions.id DESC
@@ -85,7 +83,7 @@ class MissionModel:
 
         db = get_db()
 
-        return db.execute(
+        mission = db.execute(
             """
             SELECT *
             FROM missions
@@ -93,6 +91,8 @@ class MissionModel:
             """,
             (mission_id,)
         ).fetchone()
+
+        return dict(mission) if mission else None
 
     @staticmethod
     def update(

@@ -4,7 +4,7 @@
    ========================================================================== */
 
 /* ---------------------------------------------------------------------- */
-/* Dashboard Layout                                                         */
+/* Dashboard Layout                                                       */
 /* ---------------------------------------------------------------------- */
 
 .dashboard-page {
@@ -19,7 +19,7 @@
   top: 0;
   z-index: 100;
   height: var(--navbar-height);
-  background: rgba(10,10,15,0.85);
+  background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--color-border);
@@ -95,7 +95,7 @@
 
 .dash-user-pill:hover {
   background: var(--color-surface-hover);
-  border-color: rgba(124,58,237,0.3);
+  border-color: rgba(124, 58, 237, 0.3);
 }
 
 .dash-user-avatar-small {
@@ -158,21 +158,21 @@
 }
 
 .dropdown-item.danger:hover {
-  background: rgba(239,68,68,0.10);
+  background: rgba(239, 68, 68, 0.10);
   color: #fca5a5;
 }
 
 /* ---------------------------------------------------------------------- */
-/* Dashboard Main Content                                                   */
+/* Dashboard Main Content                                                 */
 /* ---------------------------------------------------------------------- */
 
 .dashboard-main {
   flex: 1;
-  padding: var(--space-10) 0 var(--space-16);
+  padding: calc(var(--navbar-height) + var(--space-10)) 0 var(--space-16);
 }
 
 /* ---------------------------------------------------------------------- */
-/* Welcome Header                                                           */
+/* Welcome Header                                                         */
 /* ---------------------------------------------------------------------- */
 
 .welcome-header {
@@ -209,7 +209,7 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Hero Stats Row (top 4 cards)                                             */
+/* Hero Stats Row                                                         */
 /* ---------------------------------------------------------------------- */
 
 .stats-row {
@@ -227,15 +227,26 @@
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), 0 0 30px rgba(124,58,237,0.12);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(124, 58, 237, 0.12);
 }
 
 /* Coloured top accent per card */
-.stat-card-level   { --card-color: var(--color-purple); }
-.stat-card-xp      { --card-color: var(--color-cyan); }
-.stat-card-coins   { --card-color: var(--color-gold); }
-.stat-card-streak  { --card-color: var(--color-pink); }
+.stat-card-level {
+  --card-color: var(--color-purple);
+}
+
+.stat-card-xp {
+  --card-color: var(--color-cyan);
+}
+
+.stat-card-coins {
+  --card-color: var(--color-gold);
+}
+
+.stat-card-streak {
+  --card-color: var(--color-pink);
+}
 
 .stat-card::before {
   content: '';
@@ -283,8 +294,8 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,7 +317,7 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Dashboard Second Row                                                     */
+/* Dashboard Second Row                                                   */
 /* ---------------------------------------------------------------------- */
 
 .dashboard-second-row {
@@ -317,11 +328,36 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* User Profile Card                                                        */
+/* User Profile Card                                                      */
 /* ---------------------------------------------------------------------- */
 
 .profile-card {
   padding: var(--space-8);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.profile-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right,
+      rgba(124, 58, 237, 0.14),
+      transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.profile-card>* {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(124, 58, 237, 0.18);
 }
 
 .profile-card-header {
@@ -349,17 +385,21 @@
   font-weight: var(--font-weight-bold);
   position: relative;
   z-index: 1;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.35);
 }
 
 .profile-avatar-ring {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  background: conic-gradient(
-    var(--color-purple) 0%,
-    var(--color-cyan)   60%,
-    var(--color-purple) 100%
-  );
+  background: conic-gradient(var(--color-purple) 0%,
+      var(--color-cyan) 60%,
+      var(--color-purple) 100%);
   z-index: 0;
   animation: rotateSlow 8s linear infinite;
 }
@@ -390,8 +430,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: rgba(124,58,237,0.15);
-  border: 1px solid rgba(124,58,237,0.3);
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.3);
   border-radius: var(--radius-full);
   padding: var(--space-1) var(--space-3);
   font-size: var(--font-size-xs);
@@ -429,10 +469,11 @@
 
 .xp-bar-track {
   height: 12px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-full);
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.04);
 }
 
 .xp-bar-fill {
@@ -441,7 +482,7 @@
   border-radius: var(--radius-full);
   position: relative;
   transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 0 16px rgba(124,58,237,0.5);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.5);
 }
 
 /* Animated sheen effect on XP bar */
@@ -449,12 +490,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.25) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
 }
@@ -478,17 +517,29 @@
 .profile-mini-stat {
   text-align: center;
   padding: var(--space-4) var(--space-2);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 
-.profile-mini-stat-icon { font-size: 20px; margin-bottom: var(--space-1); }
+.profile-mini-stat:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 58, 237, 0.3);
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.profile-mini-stat-icon {
+  font-size: 20px;
+  margin-bottom: var(--space-1);
+}
+
 .profile-mini-stat-value {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
 }
+
 .profile-mini-stat-label {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
@@ -496,7 +547,7 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Activity / Info Card                                                     */
+/* Activity / Info Card                                                   */
 /* ---------------------------------------------------------------------- */
 
 .activity-card {
@@ -536,15 +587,16 @@
   gap: 4px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all var(--transition-fast);
 }
 
 .streak-day.active {
-  background: rgba(124,58,237,0.15);
-  border-color: rgba(124,58,237,0.35);
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.35);
   color: var(--color-purple-light);
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.18);
 }
 
 .streak-day.today {
@@ -554,9 +606,18 @@
   box-shadow: var(--shadow-purple);
 }
 
-.streak-day-label { color: var(--color-text-muted); font-size: 10px; }
-.streak-day.active .streak-day-label { color: var(--color-purple-light); }
-.streak-day.today .streak-day-label { color: rgba(255,255,255,0.8); }
+.streak-day-label {
+  color: var(--color-text-muted);
+  font-size: 10px;
+}
+
+.streak-day.active .streak-day-label {
+  color: var(--color-purple-light);
+}
+
+.streak-day.today .streak-day-label {
+  color: rgba(255, 255, 255, 0.8);
+}
 
 /* Quick Stats in activity card */
 .activity-quick-stats {
@@ -568,9 +629,16 @@
 
 .activity-stat {
   padding: var(--space-4);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.activity-stat:hover {
+  transform: translateY(-3px);
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.25);
 }
 
 .activity-stat-label {
@@ -584,16 +652,24 @@
   font-weight: var(--font-weight-bold);
 }
 
-.activity-stat-value.purple { color: var(--color-purple-light); }
-.activity-stat-value.cyan   { color: var(--color-cyan-light); }
-.activity-stat-value.gold   { color: var(--color-gold-light); }
+.activity-stat-value.purple {
+  color: var(--color-purple-light);
+}
+
+.activity-stat-value.cyan {
+  color: var(--color-cyan-light);
+}
+
+.activity-stat-value.gold {
+  color: var(--color-gold-light);
+}
 
 /* Getting Started prompt */
 .getting-started {
   margin-top: auto;
   padding: var(--space-4);
   background: var(--gradient-brand-soft);
-  border: 1px solid rgba(124,58,237,0.2);
+  border: 1px solid rgba(124, 58, 237, 0.2);
   border-radius: var(--radius-lg);
 }
 
@@ -610,7 +686,7 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Responsive                                                               */
+/* Responsive                                                             */
 /* ---------------------------------------------------------------------- */
 
 @media (max-width: 1024px) {
@@ -624,7 +700,9 @@
 }
 
 @media (max-width: 768px) {
-  .dash-date { display: none; }
+  .dash-date {
+    display: none;
+  }
 
   .stats-row {
     grid-template-columns: 1fr 1fr;
@@ -652,7 +730,9 @@
     font-size: var(--font-size-3xl);
   }
 
-  .dash-user-name-small { display: none; }
+  .dash-user-name-small {
+    display: none;
+  }
 
   .activity-quick-stats {
     grid-template-columns: 1fr;

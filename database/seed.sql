@@ -1,5 +1,6 @@
 --------------------------------------------------
 -- DEFAULT USER (Development)
+-- Password: dev123  (pbkdf2:sha256, for local use only)
 --------------------------------------------------
 
 INSERT OR IGNORE INTO users
@@ -15,7 +16,7 @@ VALUES
     1,
     'Development User',
     'developer@lifexp.local',
-    'development',
+    'pbkdf2:sha256:600000$QA1LHL70JEzQVS4z$95d3f7de6a5a72e0acbc85d97d17ede01e37dafa79bbf0f5ad6164f9832167b7',
     'default.png'
 );
 
