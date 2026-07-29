@@ -92,11 +92,23 @@ Mission Center
 
             <div class="card-actions">
 
-                <button class="complete-btn">
+                {% if mission.is_completed %}
 
-                    Complete
+                <span class="complete-btn completed">
 
-                </button>
+                    ✅ Completed
+
+                </span>
+
+                {% else %}
+
+                <a href="{{ url_for('missions.complete', mission_id=mission.id) }}" class="complete-btn">
+
+                    ✅ Complete
+
+                </a>
+
+                {% endif %}
 
                 <a href="{{ url_for('missions.delete', mission_id=mission.id) }}" class="delete-btn"
                     onclick="return confirm('Delete this mission?')">

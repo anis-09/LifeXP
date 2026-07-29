@@ -69,13 +69,42 @@ def create():
 
         except Exception as e:
 
-            # DEBUG MODE
-            # Show the actual error instead of hiding it.
             raise e
 
     return render_template(
         "create_mission.html",
         categories=categories
+    )
+
+
+@missions_bp.route("/complete/<int:mission_id>")
+def complete(mission_id):
+    """
+    Mark a mission as completed.
+    """
+
+    try:
+
+        MissionService.complete_mission(mission_id)
+
+        flash(
+            "🎉 Mission completed successfully!",
+            "success"
+        )
+
+    except ValueError as error:
+
+        flash(
+            str(error),
+            "error"
+        )
+
+    except Exception as e:
+
+        raise e
+
+    return redirect(
+        url_for("missions.index")
     )
 
 

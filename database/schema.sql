@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS mission_categories (
 
     color TEXT
 );
+
 --------------------------------------------------
 -- MISSIONS
 --------------------------------------------------
@@ -90,6 +91,10 @@ CREATE TABLE IF NOT EXISTS missions (
     is_system INTEGER DEFAULT 0,
 
     created_by INTEGER,
+
+    is_completed INTEGER DEFAULT 0,
+
+    completed_at TIMESTAMP,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

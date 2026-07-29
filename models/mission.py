@@ -137,6 +137,27 @@ class MissionModel:
         db.commit()
 
     @staticmethod
+    def complete(mission_id):
+        """
+        Mark a mission as completed.
+        """
+
+        db = get_db()
+
+        db.execute(
+            """
+            UPDATE missions
+            SET
+                is_completed = 1,
+                completed_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (mission_id,)
+        )
+
+        db.commit()
+
+    @staticmethod
     def delete(mission_id):
         """Delete a mission."""
 

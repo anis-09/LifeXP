@@ -73,6 +73,24 @@ class MissionService:
         )
 
     @staticmethod
+    def complete_mission(mission_id):
+        """
+        Mark a mission as completed.
+        """
+
+        mission = MissionModel.get_by_id(mission_id)
+
+        if mission is None:
+            raise ValueError("Mission not found.")
+
+        if mission["is_completed"]:
+            raise ValueError("Mission is already completed.")
+
+        MissionModel.complete(mission_id)
+
+        return mission
+
+    @staticmethod
     def delete_mission(mission_id):
         """
         Delete a mission.

@@ -1,9 +1,34 @@
 --------------------------------------------------
+-- DEFAULT USER (Development)
+--------------------------------------------------
+
+INSERT OR IGNORE INTO users
+(
+    id,
+    full_name,
+    email,
+    password_hash,
+    avatar
+)
+VALUES
+(
+    1,
+    'Development User',
+    'developer@lifexp.local',
+    'development',
+    'default.png'
+);
+
+--------------------------------------------------
 -- DEFAULT MISSION CATEGORIES
 --------------------------------------------------
 
 INSERT OR IGNORE INTO mission_categories
-(name, icon, color)
+(
+    name,
+    icon,
+    color
+)
 VALUES
 
 ('Study', 'book', '#3B82F6'),
