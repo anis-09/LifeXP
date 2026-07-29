@@ -86,13 +86,13 @@
             <span class="stat-card-label">Current Level</span>
             <div class="stat-card-icon" aria-hidden="true">⭐</div>
           </div>
-          <div class="stat-card-value" aria-label="Level {{ user.level }}">{{ user.level }}</div>
+          <div class="stat-card-value" aria-label="Level {{ stats.current_level }}">{{ stats.current_level }}</div>
           <div class="stat-card-sub">
-            {% if user.level < 10 %}
+            {% if stats.current_level < 10 %}
               Apprentice Hero
-            {% elif user.level < 25 %}
+            {% elif stats.current_level < 25 %}
               Rising Adventurer
-            {% elif user.level < 50 %}
+            {% elif stats.current_level < 50 %}
               Seasoned Champion
             {% else %}
               Legendary Master
@@ -109,8 +109,8 @@
             <span class="stat-card-label">Experience Points</span>
             <div class="stat-card-icon" aria-hidden="true">⚡</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ user.xp }} XP">{{ user.xp }}</div>
-          <div class="stat-card-sub">{{ xp_progress }}% to Level {{ user.level + 1 }}</div>
+          <div class="stat-card-value" aria-label="{{ stats.current_xp }} XP">{{ stats.current_xp }}</div>
+          <div class="stat-card-sub">{{ xp_progress }}% to Level {{ stats.current_level + 1 }}</div>
         </div>
 
         <!-- Coins -->
@@ -122,7 +122,7 @@
             <span class="stat-card-label">Coins</span>
             <div class="stat-card-icon" aria-hidden="true">💰</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ user.coins }} coins">{{ user.coins }}</div>
+          <div class="stat-card-value" aria-label="{{ stats.current_coins }} coins">{{ stats.current_coins }}</div>
           <div class="stat-card-sub">Available to spend</div>
         </div>
 
@@ -135,11 +135,11 @@
             <span class="stat-card-label">Daily Streak</span>
             <div class="stat-card-icon" aria-hidden="true">🔥</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ user.streak }} day streak">{{ user.streak }}</div>
+          <div class="stat-card-value" aria-label="{{ stats.current_streak }} day streak">{{ stats.current_streak }}</div>
           <div class="stat-card-sub">
-            {% if user.streak == 0 %}
+            {% if stats.current_streak == 0 %}
               Start your streak today!
-            {% elif user.streak == 1 %}
+            {% elif stats.current_streak == 1 %}
               1 day — keep going!
             {% else %}
               Day streak 🔥
@@ -168,13 +168,13 @@
               <h2 class="profile-name">{{ user.full_name }}</h2>
               <p class="profile-email">{{ user.email }}</p>
               <div class="profile-level-badge">
-                ⭐ Level {{ user.level }}
+                ⭐ Level {{ stats.current_level }}
                 —
-                {% if user.level < 10 %}
+                {% if stats.current_level < 10 %}
                   Apprentice
-                {% elif user.level < 25 %}
+                {% elif stats.current_level < 25 %}
                   Adventurer
-                {% elif user.level < 50 %}
+                {% elif stats.current_level < 50 %}
                   Champion
                 {% else %}
                   Master
@@ -186,9 +186,9 @@
           <!-- XP Progress Bar -->
           <div class="profile-xp-section" aria-label="XP Progress">
             <div class="profile-xp-header">
-              <span class="profile-xp-title">XP Progress to Level {{ user.level + 1 }}</span>
+              <span class="profile-xp-title">XP Progress to Level {{ stats.current_level + 1 }}</span>
               <span class="profile-xp-values">
-                <span>{{ user.xp }}</span> / {{ xp_needed }} XP
+                <span>{{ stats.current_xp }}</span> / {{ xp_needed }} XP
               </span>
             </div>
             <div class="xp-bar-track" role="progressbar" aria-valuenow="{{ xp_progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ xp_progress }}% XP to next level">
@@ -206,17 +206,17 @@
           <div class="profile-mini-stats">
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">⭐</div>
-              <div class="profile-mini-stat-value">{{ user.level }}</div>
+              <div class="profile-mini-stat-value">{{ stats.current_level }}</div>
               <div class="profile-mini-stat-label">Level</div>
             </div>
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">💰</div>
-              <div class="profile-mini-stat-value">{{ user.coins }}</div>
+              <div class="profile-mini-stat-value">{{ stats.current_coins }}</div>
               <div class="profile-mini-stat-label">Coins</div>
             </div>
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">🔥</div>
-              <div class="profile-mini-stat-value">{{ user.streak }}</div>
+              <div class="profile-mini-stat-value">{{ stats.current_streak }}</div>
               <div class="profile-mini-stat-label">Streak</div>
             </div>
           </div>
@@ -236,9 +236,9 @@
           <div class="streak-week" aria-label="7 day streak overview">
             {% set days = ['M','T','W','T','F','S','S'] %}
             {% for i in range(7) %}
-              <div class="streak-day {% if loop.index == 7 %}today{% elif loop.index <= user.streak %}active{% endif %}" aria-label="Day {{ i + 1 }}">
+              <div class="streak-day {% if loop.index == 7 %}today{% elif loop.index <= stats.current_streak %}active{% endif %}" aria-label="Day {{ i + 1 }}">
                 <span>{{ days[i] }}</span>
-                <span>{% if loop.index == 7 %}⚡{% elif loop.index <= user.streak %}✓{% else %}·{% endif %}</span>
+                <span>{% if loop.index == 7 %}⚡{% elif loop.index <= stats.current_streak %}✓{% else %}·{% endif %}</span>
               </div>
             {% endfor %}
           </div>
@@ -247,19 +247,19 @@
           <div class="activity-quick-stats">
             <div class="activity-stat">
               <div class="activity-stat-label">Total XP Earned</div>
-              <div class="activity-stat-value purple">{{ user.xp }}</div>
+              <div class="activity-stat-value purple">{{ stats.current_xp }}</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Coins Collected</div>
-              <div class="activity-stat-value gold">{{ user.coins }}</div>
+              <div class="activity-stat-value gold">{{ stats.current_coins }}</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Current Level</div>
-              <div class="activity-stat-value cyan">{{ user.level }}</div>
+              <div class="activity-stat-value cyan">{{ stats.current_level }}</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Day Streak</div>
-              <div class="activity-stat-value purple">{{ user.streak }} 🔥</div>
+              <div class="activity-stat-value purple">{{ stats.current_streak }} 🔥</div>
             </div>
           </div>
 

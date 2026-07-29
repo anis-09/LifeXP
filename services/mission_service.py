@@ -5,6 +5,8 @@ Mission Service Layer
 """
 
 from models.mission import MissionModel
+from services.xp_service import XPService
+from services.coin_service import CoinService
 
 
 class MissionService:
@@ -13,7 +15,7 @@ class MissionService:
     """
 
     @staticmethod
-    def create_mission(data):
+    def create_mission(data, user_id=None):
         """
         Validate and create a new mission.
         """
@@ -35,7 +37,7 @@ class MissionService:
             xp_reward=int(data.get("xp_reward")),
             coin_reward=int(data.get("coin_reward")),
             is_daily="is_daily" in data,
-            created_by=None      # Replace with logged-in user later
+            created_by=user_id
         )
 
     @staticmethod
@@ -73,9 +75,12 @@ class MissionService:
         )
 
     @staticmethod
-    def complete_mission(mission_id):
+    def complete_mission(
+        mission_id,
+        user_id
+    ):
         """
-        Mark a mission as completed.
+        Mark a mission as completed and reward the logged-in user.
         """
 
         mission = MissionModel.get_by_id(mission_id)
@@ -86,7 +91,24 @@ class MissionService:
         if mission["is_completed"]:
             raise ValueError("Mission is already completed.")
 
+        # Mark mission completed
         MissionModel.complete(mission_id)
+
+        # Reward XP
+        XPService.reward(
+            user_id=user_id,
+            amount=mission["xp_reward"],
+            source="Mission",
+            reference_id=mission_id
+        )
+
+        # Reward Coins
+        CoinService.reward(
+            user_id=user_id,
+            amount=mission["coin_reward"],
+            source="Mission",
+            reference_id=mission_id
+        )
 
         return mission
 

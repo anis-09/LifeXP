@@ -11,6 +11,7 @@ from flask import (
     redirect,
     url_for,
     flash,
+    session,
 )
 
 from models.mission_category import MissionCategoryModel
@@ -43,13 +44,28 @@ def create():
     Create a new mission.
     """
 
+    # User must be logged in
+    if "user_id" not in session:
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
     categories = MissionCategoryModel.get_all()
 
     if request.method == "POST":
 
         try:
 
-            MissionService.create_mission(request.form)
+            MissionService.create_mission(
+                data=request.form,
+                user_id=session["user_id"]
+            )
 
             flash(
                 "🎉 Mission created successfully!",
@@ -83,9 +99,23 @@ def complete(mission_id):
     Mark a mission as completed.
     """
 
+    if "user_id" not in session:
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
     try:
 
-        MissionService.complete_mission(mission_id)
+        MissionService.complete_mission(
+            mission_id=mission_id,
+            user_id=session["user_id"]
+        )
 
         flash(
             "🎉 Mission completed successfully!",

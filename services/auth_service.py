@@ -2,11 +2,12 @@
 services/auth_service.py
 ------------------------
 Business logic for authentication:
-- register_user()  — validate + create account
+- register_user()  — validate + create account + create user_stats row
 - login_user()     — validate credentials + start session
 """
 
 from models.user import create_user, get_user_by_email, email_exists, verify_password
+from models.user_stats import UserStatsModel
 from utils.validators import (
     validate_full_name,
     validate_email,
@@ -18,6 +19,7 @@ from utils.validators import (
 def register_user(full_name: str, email: str, password: str, confirm: str):
     """
     Run all validation checks then persist the new user.
+    Also creates a default user_stats row for the new user.
     Returns (success: bool, message: str, user_id: int | None).
     """
     # --- Validate inputs ---
@@ -43,6 +45,10 @@ def register_user(full_name: str, email: str, password: str, confirm: str):
 
     # --- Create user ---
     user_id = create_user(full_name, email, password)
+
+    # --- Create default stats row for new user ---
+    UserStatsModel.create(user_id)
+
     return True, "Account created successfully!", user_id
 
 
@@ -58,7 +64,7 @@ def login_user(email: str, password: str):
     if not user:
         return False, "Invalid email or password.", None
 
-    if not verify_password(user['password'], password):
+    if not verify_password(user['password_hash'], password):
         return False, "Invalid email or password.", None
 
     return True, "Login successful.", user

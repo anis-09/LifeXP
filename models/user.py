@@ -5,13 +5,13 @@ User model: all database operations related to the users table.
 Uses parameterised queries to prevent SQL injection.
 """
 
-from utils.db import get_db
+from database.db import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def create_user(full_name: str, email: str, password: str) -> int:
     """
-    Insert a new user into the database.
+    Insert a new user into the users table.
     Password is hashed with werkzeug's pbkdf2 method.
     Returns the new user's row id.
     """
@@ -19,8 +19,8 @@ def create_user(full_name: str, email: str, password: str) -> int:
     hashed = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
     cursor = db.execute(
         """
-        INSERT INTO users (full_name, email, password, level, xp, coins, streak)
-        VALUES (?, ?, ?, 1, 0, 0, 0)
+        INSERT INTO users (full_name, email, password_hash)
+        VALUES (?, ?, ?)
         """,
         (full_name.strip(), email.strip().lower(), hashed)
     )

@@ -78,6 +78,30 @@ class UserStatsModel:
         db.commit()
 
     @staticmethod
+    def add_coins(user_id, coins):
+        """
+        Add coins to user.
+        """
+
+        db = get_db()
+
+        db.execute(
+            """
+            UPDATE user_stats
+            SET
+                current_coins = current_coins + ?,
+                last_updated = CURRENT_TIMESTAMP
+            WHERE user_id = ?
+            """,
+            (
+                coins,
+                user_id
+            )
+        )
+
+        db.commit()
+
+    @staticmethod
     def increment_completed_missions(user_id):
         """
         Increase completed mission count.
