@@ -1,13 +1,42 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-{% block title %}Dashboard — LifeXP{% endblock %}
-{% block meta_description %}Your LifeXP dashboard — track your level, XP, coins, and daily streak.{% endblock %}
+  <!-- SEO Meta -->
+  <meta name="description" content="Your LifeXP dashboard — track your level, XP, coins, and daily streak." />
+  <meta name="theme-color" content="#0a0a0f" />
 
-{% block styles %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
-{% endblock %}
+  <title>Dashboard — LifeXP</title>
 
-{% block content %}
+  <!-- Favicon (emoji fallback) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Design System CSS (load order matters) -->
+  <link rel="stylesheet" href="/static/css/variables.css" />
+  <link rel="stylesheet" href="/static/css/animations.css" />
+  <link rel="stylesheet" href="/static/css/base.css" />
+
+  <!-- Page-specific CSS -->
+  
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+
+</head>
+<body>
+
+  <!-- Background decorative orbs -->
+  <div class="bg-orb bg-orb-purple" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-cyan"   aria-hidden="true"></div>
+
+  <!-- Flash messages (server-side) -->
+  
+    
+  
+
+  <!-- Page Content -->
+  <div class="page-content">
+    
 
 <div class="dashboard-page">
 
@@ -18,7 +47,7 @@
     <div class="container dashboard-navbar-inner">
 
       <!-- Logo -->
-      <a href="{{ url_for('dashboard.index') }}" class="dash-logo" aria-label="LifeXP Dashboard">
+      <a href="/dashboard" class="dash-logo" aria-label="LifeXP Dashboard">
         <div class="dash-logo-icon" aria-hidden="true">⚡</div>
         <span class="dash-logo-text">Life<span class="highlight">XP</span></span>
       </a>
@@ -26,23 +55,23 @@
       <!-- Right side -->
       <div class="dash-nav-right">
         <!-- Current date -->
-        <div class="dash-date" aria-label="Today's date">📅 {{ today }}</div>
+        <div class="dash-date" aria-label="Today's date">📅 Wednesday, July 29, 2026</div>
 
         <!-- User pill with dropdown -->
         <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
           <div class="dash-user-avatar-small" aria-hidden="true">
-            {{ user.full_name[0].upper() }}
+            D
           </div>
-          <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
+          <span class="dash-user-name-small">Development</span>
           <span aria-hidden="true">▾</span>
 
           <!-- Dropdown -->
           <div class="dash-user-dropdown" id="user-dropdown" role="menu">
-            <a href="{{ url_for('dashboard.index') }}" class="dropdown-item" role="menuitem">
+            <a href="/dashboard" class="dropdown-item" role="menuitem">
               👤 My Profile
             </a>
             <div class="divider" style="margin: var(--space-1) 0;"></div>
-            <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">
+            <a href="/logout" class="dropdown-item danger" role="menuitem" id="logout-btn">
               🚪 Logout
             </a>
           </div>
@@ -66,10 +95,10 @@
         </div>
         <h1 class="welcome-title">
           Welcome back,
-          <span class="user-name">{{ user.full_name.split()[0] }}</span>!
+          <span class="user-name">Development</span>!
         </h1>
         <p class="welcome-sub">
-          Today is <strong>{{ today }}</strong>. Keep pushing — your next level awaits.
+          Today is <strong>Wednesday, July 29, 2026</strong>. Keep pushing — your next level awaits.
         </p>
       </section>
 
@@ -86,17 +115,11 @@
             <span class="stat-card-label">Current Level</span>
             <div class="stat-card-icon" aria-hidden="true">⭐</div>
           </div>
-          <div class="stat-card-value" aria-label="Level {{ stats.current_level }}">{{ stats.current_level }}</div>
+          <div class="stat-card-value" aria-label="Level 1">1</div>
           <div class="stat-card-sub">
-            {% if stats.current_level < 10 %}
+            
               Apprentice Hero
-            {% elif stats.current_level < 25 %}
-              Rising Adventurer
-            {% elif stats.current_level < 50 %}
-              Seasoned Champion
-            {% else %}
-              Legendary Master
-            {% endif %}
+            
           </div>
         </div>
 
@@ -109,8 +132,8 @@
             <span class="stat-card-label">Experience Points</span>
             <div class="stat-card-icon" aria-hidden="true">⚡</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ stats.current_xp }} XP">{{ stats.current_xp }}</div>
-          <div class="stat-card-sub">{{ xp_progress }}% to Level {{ stats.current_level + 1 }}</div>
+          <div class="stat-card-value" aria-label="0 XP">0</div>
+          <div class="stat-card-sub">0% to Level 2</div>
         </div>
 
         <!-- Coins -->
@@ -122,7 +145,7 @@
             <span class="stat-card-label">Coins</span>
             <div class="stat-card-icon" aria-hidden="true">💰</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ stats.current_coins }} coins">{{ stats.current_coins }}</div>
+          <div class="stat-card-value" aria-label="0 coins">0</div>
           <div class="stat-card-sub">Available to spend</div>
         </div>
 
@@ -135,15 +158,11 @@
             <span class="stat-card-label">Daily Streak</span>
             <div class="stat-card-icon" aria-hidden="true">🔥</div>
           </div>
-          <div class="stat-card-value" aria-label="{{ stats.current_streak }} day streak">{{ stats.current_streak }}</div>
+          <div class="stat-card-value" aria-label="0 day streak">0</div>
           <div class="stat-card-sub">
-            {% if stats.current_streak == 0 %}
+            
               Start your streak today!
-            {% elif stats.current_streak == 1 %}
-              1 day — keep going!
-            {% else %}
-              Day streak 🔥
-            {% endif %}
+            
           </div>
         </div>
 
@@ -161,24 +180,18 @@
             <div class="profile-avatar-wrapper" aria-hidden="true">
               <div class="profile-avatar-ring"></div>
               <div class="profile-avatar-ring-inner"></div>
-              <div class="profile-avatar">{{ user.full_name[0].upper() }}</div>
+              <div class="profile-avatar">D</div>
             </div>
 
             <div class="profile-info">
-              <h2 class="profile-name">{{ user.full_name }}</h2>
-              <p class="profile-email">{{ user.email }}</p>
+              <h2 class="profile-name">Development User</h2>
+              <p class="profile-email">developer@lifexp.local</p>
               <div class="profile-level-badge">
-                ⭐ Level {{ stats.current_level }}
+                ⭐ Level 1
                 —
-                {% if stats.current_level < 10 %}
+                
                   Apprentice
-                {% elif stats.current_level < 25 %}
-                  Adventurer
-                {% elif stats.current_level < 50 %}
-                  Champion
-                {% else %}
-                  Master
-                {% endif %}
+                
               </div>
             </div>
           </div>
@@ -186,37 +199,37 @@
           <!-- XP Progress Bar -->
           <div class="profile-xp-section" aria-label="XP Progress">
             <div class="profile-xp-header">
-              <span class="profile-xp-title">XP Progress to Level {{ stats.current_level + 1 }}</span>
+              <span class="profile-xp-title">XP Progress to Level 2</span>
               <span class="profile-xp-values">
-                <span>{{ stats.current_xp }}</span> / {{ level_end_xp }} XP
+                <span>0</span> / 1000 XP
               </span>
             </div>
-            <div class="xp-bar-track" role="progressbar" aria-valuenow="{{ xp_progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ xp_progress }}% XP to next level">
+            <div class="xp-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="0% XP to next level">
               <div
                 class="xp-bar-fill"
                 id="xp-bar"
                 style="width: 0%;"
-                data-width="{{ xp_progress }}"
+                data-width="0"
               ></div>
             </div>
-            <div class="profile-xp-percent">{{ xp_progress }}% complete</div>
+            <div class="profile-xp-percent">0% complete</div>
           </div>
 
           <!-- Mini stats row -->
           <div class="profile-mini-stats">
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">⭐</div>
-              <div class="profile-mini-stat-value">{{ stats.current_level }}</div>
+              <div class="profile-mini-stat-value">1</div>
               <div class="profile-mini-stat-label">Level</div>
             </div>
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">💰</div>
-              <div class="profile-mini-stat-value">{{ stats.current_coins }}</div>
+              <div class="profile-mini-stat-value">0</div>
               <div class="profile-mini-stat-label">Coins</div>
             </div>
             <div class="profile-mini-stat">
               <div class="profile-mini-stat-icon" aria-hidden="true">🔥</div>
-              <div class="profile-mini-stat-value">{{ stats.current_streak }}</div>
+              <div class="profile-mini-stat-value">0</div>
               <div class="profile-mini-stat-label">Streak</div>
             </div>
           </div>
@@ -234,69 +247,72 @@
 
           <!-- Simple 7-day streak visual -->
           <div class="streak-week" aria-label="7 day streak overview">
-            {% set days = ['M','T','W','T','F','S','S'] %}
-            {% for i in range(7) %}
-              <div class="streak-day {% if loop.index == 7 %}today{% elif loop.index <= stats.current_streak %}active{% endif %}" aria-label="Day {{ i + 1 }}">
-                <span>{{ days[i] }}</span>
-                <span>{% if loop.index == 7 %}⚡{% elif loop.index <= stats.current_streak %}✓{% else %}·{% endif %}</span>
+            
+            
+              <div class="streak-day " aria-label="Day 1">
+                <span>M</span>
+                <span>·</span>
               </div>
-            {% endfor %}
+            
+              <div class="streak-day " aria-label="Day 2">
+                <span>T</span>
+                <span>·</span>
+              </div>
+            
+              <div class="streak-day " aria-label="Day 3">
+                <span>W</span>
+                <span>·</span>
+              </div>
+            
+              <div class="streak-day " aria-label="Day 4">
+                <span>T</span>
+                <span>·</span>
+              </div>
+            
+              <div class="streak-day " aria-label="Day 5">
+                <span>F</span>
+                <span>·</span>
+              </div>
+            
+              <div class="streak-day " aria-label="Day 6">
+                <span>S</span>
+                <span>·</span>
+              </div>
+            
+              <div class="streak-day today" aria-label="Day 7">
+                <span>S</span>
+                <span>⚡</span>
+              </div>
+            
           </div>
 
           <!-- Quick stat cards -->
           <div class="activity-quick-stats">
             <div class="activity-stat">
               <div class="activity-stat-label">Total XP Earned</div>
-              <div class="activity-stat-value purple">{{ stats.current_xp }}</div>
+              <div class="activity-stat-value purple">0</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Coins Collected</div>
-              <div class="activity-stat-value gold">{{ stats.current_coins }}</div>
+              <div class="activity-stat-value gold">0</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Current Level</div>
-              <div class="activity-stat-value cyan">{{ stats.current_level }}</div>
+              <div class="activity-stat-value cyan">1</div>
             </div>
             <div class="activity-stat">
               <div class="activity-stat-label">Day Streak</div>
-              <div class="activity-stat-value purple">{{ stats.current_streak }} 🔥</div>
+              <div class="activity-stat-value purple">0 🔥</div>
             </div>
           </div>
 
-          <!-- Daily Missions -->
-          <div class="daily-missions-section" style="margin-top: 2rem;">
-            <h3 class="card-section-title" style="margin-bottom: 1rem;">
-              <span class="card-section-title-icon" aria-hidden="true">🎯</span>
-              Today's Missions
-            </h3>
-            
-            {% if daily_missions %}
-              <div class="mission-list" style="display: flex; flex-direction: column; gap: 1rem;">
-                {% for mission in daily_missions %}
-                  <div class="mission-card" style="background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-md); padding: 1rem; border-left: 4px solid var(--purple-500, #8b5cf6);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                      <div>
-                        <h4 style="margin: 0; font-size: 1.1rem; color: var(--text-primary);">{{ mission.title }}</h4>
-                        <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
-                          {{ mission.description }}
-                        </p>
-                      </div>
-                      <div style="text-align: right; font-size: 0.9rem; white-space: nowrap; padding-left: 1rem;">
-                        <span style="color: #b794f4;">⚡ {{ mission.xp_reward }}</span><br>
-                        <span style="color: #f6e05e;">💰 {{ mission.coin_reward }}</span>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            {% else %}
-              <div class="getting-started">
-                <div class="getting-started-title">No Missions Today</div>
-                <div class="getting-started-text">
-                  There are no daily missions available right now. Keep exploring!
-                </div>
-              </div>
-            {% endif %}
+          <!-- Getting started prompt -->
+          <div class="getting-started">
+            <div class="getting-started-title">🗺️ Begin Your Quest</div>
+            <div class="getting-started-text">
+              Missions, leaderboards, and your AI Coach are coming in your next
+              adventure module. Stay tuned and keep levelling up!
+            </div>
           </div>
 
         </article><!-- /activity-card -->
@@ -308,9 +324,24 @@
 
 </div><!-- /dashboard-page -->
 
-{% endblock %}
 
+  </div>
 
-{% block scripts %}
-  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-{% endblock %}
+  <!-- Base JS (auto-dismiss flash messages) -->
+  <script>
+    // Auto-dismiss flash messages after 4 seconds
+    setTimeout(function () {
+      var container = document.getElementById('flash-container');
+      if (container) {
+        container.style.transition = 'opacity 0.4s ease';
+        container.style.opacity = '0';
+        setTimeout(function () { container.remove(); }, 400);
+      }
+    }, 4000);
+  </script>
+
+  
+  <script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>

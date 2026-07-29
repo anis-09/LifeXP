@@ -16,13 +16,16 @@ class UserMissionModel:
     def assign_mission(user_id, mission_id):
         """
         Assign a mission to a user for today.
+
+        NOTE:
+        Transaction is managed by the service layer.
         """
 
         db = get_db()
 
         cursor = db.execute(
             """
-            INSERT INTO user_missions
+            INSERT OR IGNORE INTO user_missions
             (
                 user_id,
                 mission_id
@@ -35,34 +38,28 @@ class UserMissionModel:
             )
         )
 
-        db.commit()
-
         return cursor.lastrowid
 
     @staticmethod
-    def has_assignment_today(user_id, mission_id):
+    def assign_all_daily_missions(user_id):
         """
-        Check whether today's assignment already exists.
+        Atomically assign all daily missions to the user for today.
+        Uses INSERT OR IGNORE to safely skip already-assigned missions.
+
+        NOTE:
+        Transaction is managed by the service layer.
         """
 
         db = get_db()
 
-        assignment = db.execute(
+        db.execute(
             """
-            SELECT id
-            FROM user_missions
-            WHERE
-                user_id = ?
-                AND mission_id = ?
-                AND assignment_date = DATE('now')
+            INSERT OR IGNORE INTO user_missions (user_id, mission_id)
+            SELECT ?, id FROM missions WHERE is_daily = 1
             """,
-            (
-                user_id,
-                mission_id
-            )
-        ).fetchone()
+            (user_id,)
+        )
 
-        return assignment is not None
 
     @staticmethod
     def get_today_missions(user_id):
@@ -118,6 +115,9 @@ class UserMissionModel:
     def complete_assignment(assignment_id):
         """
         Mark an assignment completed.
+
+        NOTE:
+        Transaction is managed by the service layer.
         """
 
         db = get_db()
@@ -126,19 +126,20 @@ class UserMissionModel:
             """
             UPDATE user_missions
             SET
-                status='Completed',
-                completed_at=CURRENT_TIMESTAMP
-            WHERE id=?
+                status = 'Completed',
+                completed_at = CURRENT_TIMESTAMP
+            WHERE id = ?
             """,
             (assignment_id,)
         )
-
-        db.commit()
 
     @staticmethod
     def update_progress(assignment_id, progress):
         """
         Update assignment progress.
+
+        NOTE:
+        Transaction is managed by the service layer.
         """
 
         db = get_db()
@@ -146,16 +147,15 @@ class UserMissionModel:
         db.execute(
             """
             UPDATE user_missions
-            SET progress=?
-            WHERE id=?
+            SET
+                progress = ?
+            WHERE id = ?
             """,
             (
                 progress,
                 assignment_id
             )
         )
-
-        db.commit()
 
     @staticmethod
     def get_history(user_id):

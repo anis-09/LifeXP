@@ -9,6 +9,8 @@ from datetime import datetime
 from constants import XP_PER_LEVEL
 from models.user import get_user_by_id
 from models.user_stats import UserStatsModel
+from services.daily_mission_service import DailyMissionService
+
 
 
 class DashboardService:
@@ -49,6 +51,8 @@ class DashboardService:
             else 0
         )
 
+        today_missions = DailyMissionService.ensure_daily_missions(user_id)
+
         return {
             "user": user,
             "stats": stats,
@@ -60,4 +64,6 @@ class DashboardService:
             "xp_remaining": xp_remaining,
             "level_start_xp": level_start_xp,
             "level_end_xp": level_end_xp,
-        }
+
+            "daily_missions": today_missions,
+        }
