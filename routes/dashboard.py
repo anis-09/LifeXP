@@ -24,6 +24,8 @@ def index():
     """
 
     if "user_id" not in session:
+        from flask import flash
+        flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
     dashboard_data = DashboardService.get_dashboard_data(

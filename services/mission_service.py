@@ -5,8 +5,7 @@ Mission Service Layer
 """
 
 from models.mission import MissionModel
-from services.xp_service import XPService
-from services.coin_service import CoinService
+from services.reward_service import RewardService
 
 
 class MissionService:
@@ -81,6 +80,10 @@ class MissionService:
     ):
         """
         Mark a mission as completed and reward the logged-in user.
+
+        Returns:
+            tuple: (mission dict, reward dict) where reward dict contains
+                   xp, coins, level, level_up, streak, streak_milestone, etc.
         """
 
         mission = MissionModel.get_by_id(mission_id)
@@ -94,23 +97,12 @@ class MissionService:
         # Mark mission completed
         MissionModel.complete(mission_id)
 
-        # Reward XP
-        XPService.reward(
+        reward_result = RewardService.reward_user(
             user_id=user_id,
-            amount=mission["xp_reward"],
-            source="Mission",
-            reference_id=mission_id
+            mission=mission
         )
 
-        # Reward Coins
-        CoinService.reward(
-            user_id=user_id,
-            amount=mission["coin_reward"],
-            source="Mission",
-            reference_id=mission_id
-        )
-
-        return mission
+        return mission, reward_result
 
     @staticmethod
     def delete_mission(mission_id, user_id):

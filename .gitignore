@@ -26,5 +26,14 @@ Thumbs.db
 # Flask
 instance/
 
+# SQLite Database
+database.db
+*.sqlite3
+
 # SQLite backups
 *.bak
+# Automated Test Artifacts
+.playwright-mcp/
+.pytest_cache/
+.coverage
+mission_complete_result.png

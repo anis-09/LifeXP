@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS user_stats (
 
     longest_streak INTEGER DEFAULT 0,
 
+    last_activity_date DATE,
+
     missions_completed INTEGER DEFAULT 0,
 
     missions_failed INTEGER DEFAULT 0,

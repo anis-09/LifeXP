@@ -123,6 +123,39 @@ class UserStatsModel:
         db.commit()
 
     @staticmethod
+    def update_streak(
+        user_id,
+        current_streak,
+        longest_streak,
+        last_activity_date
+    ):
+        """
+        Update a user's streak information.
+        """
+
+        db = get_db()
+
+        db.execute(
+            """
+            UPDATE user_stats
+            SET
+                current_streak = ?,
+                longest_streak = ?,
+                last_activity_date = ?,
+                last_updated = CURRENT_TIMESTAMP
+            WHERE user_id = ?
+            """,
+            (
+                current_streak,
+                longest_streak,
+                last_activity_date,
+                user_id
+            )
+        )
+
+        db.commit()
+
+    @staticmethod
     def update_level(user_id, level):
         """
         Update user level.

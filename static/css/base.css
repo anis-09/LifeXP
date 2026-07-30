@@ -301,14 +301,10 @@ button {
   font-weight: var(--font-weight-medium);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  animation: fadeInDown 0.4s ease, fadeOut 0.4s ease 3.5s forwards;
+  animation: fadeInDown 0.4s ease;
   pointer-events: all;
   max-width: 360px;
   box-shadow: var(--shadow-lg);
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; transform: translateX(20px); }
 }
 
 .flash-success {

@@ -110,15 +110,29 @@ def complete(mission_id):
 
     try:
 
-        MissionService.complete_mission(
+        _mission, reward = MissionService.complete_mission(
             mission_id=mission_id,
             user_id=session["user_id"]
         )
 
-        flash(
-            "🎉 Mission completed successfully!",
-            "success"
-        )
+        # Build a context-aware success message.
+        parts = [
+            f"🎉 Mission completed!  "
+            f"⚡ +{reward['xp']} XP  "
+            f"💰 +{reward['coins']} Coins  "
+            f"🔥 Streak: {reward['streak']} day(s)"
+        ]
+
+        if reward.get("streak_milestone"):
+            parts.append(
+                f"  🏆 {reward['streak_milestone']}-Day Streak Bonus! "
+                f"+{reward['bonus_xp']} XP  +{reward['bonus_coins']} Coins"
+            )
+
+        if reward.get("level_up"):
+            parts.append(f"  ⭐ Level Up! You are now Level {reward['level']}!")
+
+        flash("".join(parts), "success")
 
     except ValueError as error:
 
@@ -133,6 +147,7 @@ def complete(mission_id):
     return redirect(
         url_for("missions.index")
     )
+
 
 
 @missions_bp.route("/delete/<int:mission_id>")

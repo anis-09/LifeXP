@@ -32,9 +32,12 @@
     {% if messages %}
       <div class="flash-container" id="flash-container" role="alert" aria-live="polite">
         {% for category, message in messages %}
-          <div class="flash flash-{{ category }}">
-            {% if category == 'success' %}✅{% elif category == 'error' %}❌{% else %}ℹ️{% endif %}
-            {{ message }}
+          <div class="flash flash-{{ category }}" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div>
+              {% if category == 'success' %}✅{% elif category == 'error' %}❌{% else %}ℹ️{% endif %}
+              {{ message }}
+            </div>
+            <button onclick="this.parentElement.remove()" style="color: inherit; opacity: 0.7; font-size: 1.2rem; cursor: pointer;">&times;</button>
           </div>
         {% endfor %}
       </div>
@@ -48,7 +51,7 @@
 
   <!-- Base JS (auto-dismiss flash messages) -->
   <script>
-    // Auto-dismiss flash messages after 4 seconds
+    // Auto-dismiss flash messages after 10 seconds
     setTimeout(function () {
       var container = document.getElementById('flash-container');
       if (container) {
@@ -56,7 +59,7 @@
         container.style.opacity = '0';
         setTimeout(function () { container.remove(); }, 400);
       }
-    }, 4000);
+    }, 10000);
   </script>
 
   {% block scripts %}{% endblock %}

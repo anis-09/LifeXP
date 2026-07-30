@@ -232,13 +232,13 @@
             Weekly Streak
           </h2>
 
-          <!-- Simple 7-day streak visual -->
+          <!-- 7-day streak visual — calendar-accurate -->
           <div class="streak-week" aria-label="7 day streak overview">
-            {% set days = ['M','T','W','T','F','S','S'] %}
-            {% for i in range(7) %}
-              <div class="streak-day {% if loop.index == 7 %}today{% elif loop.index <= stats.current_streak %}active{% endif %}" aria-label="Day {{ i + 1 }}">
-                <span>{{ days[i] }}</span>
-                <span>{% if loop.index == 7 %}⚡{% elif loop.index <= stats.current_streak %}✓{% else %}·{% endif %}</span>
+            {% for day in streak_days %}
+              <div class="streak-day {% if day.is_today %}today{% elif day.active %}active{% endif %}"
+                   aria-label="{{ day.label }}{% if day.active %} (active){% endif %}{% if day.is_today %} (today){% endif %}">
+                <span>{{ day.label }}</span>
+                <span>{% if day.is_today %}⚡{% elif day.active %}✓{% else %}·{% endif %}</span>
               </div>
             {% endfor %}
           </div>
@@ -260,6 +260,10 @@
             <div class="activity-stat">
               <div class="activity-stat-label">Day Streak</div>
               <div class="activity-stat-value purple">{{ stats.current_streak }} 🔥</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-label">Longest Streak</div>
+              <div class="activity-stat-value gold">{{ longest_streak }} 🏆</div>
             </div>
           </div>
 

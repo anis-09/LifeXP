@@ -87,4 +87,18 @@ LEVEL_XP = {
 # XP required to complete a single level (flat-band model used by XPService
 # and the dashboard progress bar). A single shared definition — never redefine
 # this value in other modules; import from here instead.
-XP_PER_LEVEL = 1000
+XP_PER_LEVEL = 1000
+
+# -----------------------------
+# Streak Milestone Bonuses
+# -----------------------------
+
+# Maps consecutive-day streak counts to (xp_bonus, coin_bonus).
+# When a user's streak reaches one of these thresholds after completing a
+# mission, the bonus is awarded automatically via RewardService.
+# Import from here — never hard-code milestone values in services.
+STREAK_MILESTONES = {
+    7:  (50,  20),
+    14: (100, 50),
+    30: (200, 100),
+}
