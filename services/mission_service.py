@@ -6,6 +6,7 @@ Mission Service Layer
 
 from models.mission import MissionModel
 from services.reward_service import RewardService
+from services.achievement_service import AchievementService
 
 
 class MissionService:
@@ -101,6 +102,9 @@ class MissionService:
             user_id=user_id,
             mission=mission
         )
+
+        newly_unlocked_achievements = AchievementService.check(user_id)
+        reward_result["newly_unlocked_achievements"] = newly_unlocked_achievements
 
         return mission, reward_result
 

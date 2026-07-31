@@ -10,7 +10,7 @@ from constants import XP_PER_LEVEL
 from models.user import get_user_by_id
 from models.user_stats import UserStatsModel
 from services.daily_mission_service import DailyMissionService
-
+from models.user_achievement import UserAchievementModel
 
 
 class DashboardService:
@@ -52,8 +52,8 @@ class DashboardService:
         )
 
         today_missions = DailyMissionService.ensure_daily_missions(user_id)
-
         streak_days = DashboardService._build_streak_days(stats)
+        unlocked_achievements = UserAchievementModel.get_unlocked_for_user(user_id)
 
         return {
             "user": user,
@@ -72,6 +72,8 @@ class DashboardService:
             # Streak data for the weekly visualiser
             "streak_days": streak_days,
             "longest_streak": stats["longest_streak"],
+
+            "unlocked_achievements": unlocked_achievements,
         }
 
     @staticmethod

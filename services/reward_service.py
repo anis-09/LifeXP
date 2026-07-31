@@ -102,3 +102,33 @@ class RewardService:
             source="Mission",
             reference_id=mission["id"]
         )
+
+    # ------------------------------------------------------------------
+    # Generic reward helpers (used by AchievementService and others)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def grant_xp(user_id: int, amount: int, source: str, reference_id: int) -> None:
+        """
+        Award XP to a user. Centralises all XP issuance through RewardService.
+        """
+        if amount > 0:
+            XPService.reward(
+                user_id=user_id,
+                amount=amount,
+                source=source,
+                reference_id=reference_id,
+            )
+
+    @staticmethod
+    def grant_coins(user_id: int, amount: int, source: str, reference_id: int) -> None:
+        """
+        Award coins to a user. Centralises all coin issuance through RewardService.
+        """
+        if amount > 0:
+            CoinService.reward(
+                user_id=user_id,
+                amount=amount,
+                source=source,
+                reference_id=reference_id,
+            )
