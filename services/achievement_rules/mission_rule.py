@@ -12,8 +12,8 @@ class MissionRule(AchievementRule):
     Checks total completed missions.
     """
 
-    def evaluate(self, user_id: int, target_value: int) -> bool:
+    def get_current_value(self, user_id: int) -> int:
         stats = UserStatsModel.get(user_id)
         if not stats:
-            return False
-        return stats["missions_completed"] >= target_value
+            return 0
+        return stats["missions_completed"]

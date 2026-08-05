@@ -29,6 +29,20 @@
 
   initXpBar();
 
+  function initAchievementProgressBars() {
+    var bars = document.querySelectorAll('.achievement-progress-fill[data-progress]');
+
+    bars.forEach(function (bar) {
+      var progress = Math.max(0, Math.min(100, parseFloat(bar.getAttribute('data-progress')) || 0));
+
+      requestAnimationFrame(function () {
+        bar.style.width = progress + '%';
+      });
+    });
+  }
+
+  initAchievementProgressBars();
+
 
   /* ------------------------------------------------------------------ */
   /* User Dropdown Toggle                                                 */

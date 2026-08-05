@@ -12,8 +12,8 @@ class StreakRule(AchievementRule):
     Checks highest streak length.
     """
 
-    def evaluate(self, user_id: int, target_value: int) -> bool:
+    def get_current_value(self, user_id: int) -> int:
         stats = UserStatsModel.get(user_id)
         if not stats:
-            return False
-        return stats["longest_streak"] >= target_value
+            return 0
+        return stats["longest_streak"]

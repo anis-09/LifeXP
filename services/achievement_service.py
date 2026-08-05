@@ -23,6 +23,32 @@ class AchievementService:
     """
 
     @staticmethod
+    def get_user_achievements_with_progress(user_id: int) -> Dict[str, List[Dict]]:
+        """
+        Returns all unlocked and locked achievements for a user.
+        Injects current_progress and progress_percentage into locked achievements.
+        """
+        unlocked = UserAchievementModel.get_unlocked_for_user(user_id)
+        locked = UserAchievementModel.get_locked_for_user(user_id)
+
+        for ach in locked:
+            rule = AchievementRuleRegistry.get_rule(ach["condition_key"])
+            target = ach["target_value"]
+            if rule:
+                current_val = rule.get_current_value(user_id)
+                percentage = min(100.0, (current_val / target) * 100) if target > 0 else 100.0
+                ach["current_progress"] = current_val
+                ach["progress_percentage"] = round(percentage, 1)
+            else:
+                ach["current_progress"] = 0
+                ach["progress_percentage"] = 0.0
+
+        return {
+            "unlocked": unlocked,
+            "locked": locked
+        }
+
+    @staticmethod
     def check(user_id: int) -> List[Dict]:
         """
         Check all locked achievements for the user and grant any that are met.

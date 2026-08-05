@@ -12,8 +12,8 @@ class XPRule(AchievementRule):
     Checks total XP earned.
     """
 
-    def evaluate(self, user_id: int, target_value: int) -> bool:
+    def get_current_value(self, user_id: int) -> int:
         stats = UserStatsModel.get(user_id)
         if not stats:
-            return False
-        return stats["current_xp"] >= target_value
+            return 0
+        return stats["current_xp"]

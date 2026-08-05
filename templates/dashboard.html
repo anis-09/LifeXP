@@ -41,7 +41,7 @@
             <a href="{{ url_for('dashboard.index') }}" class="dropdown-item" role="menuitem">
               👤 My Profile
             </a>
-            <div class="divider" style="margin: var(--space-1) 0;"></div>
+            <div class="divider dashboard-dropdown-divider"></div>
             <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">
               🚪 Logout
             </a>
@@ -79,8 +79,7 @@
 
         <!-- Level -->
         <div
-          class="stat-card stat-card-level glass-card animate-fade-in-up"
-          style="animation-delay: 0.05s;"
+          class="stat-card stat-card-level glass-card animate-fade-in-up dashboard-delay-1"
         >
           <div class="stat-card-header">
             <span class="stat-card-label">Current Level</span>
@@ -102,8 +101,7 @@
 
         <!-- XP -->
         <div
-          class="stat-card stat-card-xp glass-card animate-fade-in-up"
-          style="animation-delay: 0.15s;"
+          class="stat-card stat-card-xp glass-card animate-fade-in-up dashboard-delay-2"
         >
           <div class="stat-card-header">
             <span class="stat-card-label">Experience Points</span>
@@ -115,8 +113,7 @@
 
         <!-- Coins -->
         <div
-          class="stat-card stat-card-coins glass-card animate-fade-in-up"
-          style="animation-delay: 0.25s;"
+          class="stat-card stat-card-coins glass-card animate-fade-in-up dashboard-delay-3"
         >
           <div class="stat-card-header">
             <span class="stat-card-label">Coins</span>
@@ -128,8 +125,7 @@
 
         <!-- Streak -->
         <div
-          class="stat-card stat-card-streak glass-card animate-fade-in-up"
-          style="animation-delay: 0.35s;"
+          class="stat-card stat-card-streak glass-card animate-fade-in-up dashboard-delay-4"
         >
           <div class="stat-card-header">
             <span class="stat-card-label">Daily Streak</span>
@@ -154,7 +150,7 @@
       <div class="dashboard-second-row">
 
         <!-- Profile Card -->
-        <article class="profile-card glass-card animate-fade-in-up" style="animation-delay: 0.4s;" aria-label="Player Profile">
+        <article class="profile-card glass-card animate-fade-in-up dashboard-delay-5" aria-label="Player Profile">
 
           <div class="profile-card-header">
             <!-- Animated avatar ring -->
@@ -195,7 +191,6 @@
               <div
                 class="xp-bar-fill"
                 id="xp-bar"
-                style="width: 0%;"
                 data-width="{{ xp_progress }}"
               ></div>
             </div>
@@ -225,7 +220,7 @@
 
 
         <!-- Activity / Streak Card -->
-        <article class="activity-card glass-card animate-fade-in-up" style="animation-delay: 0.5s;" aria-label="Activity and Streak">
+        <article class="activity-card glass-card animate-fade-in-up dashboard-delay-6" aria-label="Activity and Streak">
 
           <h2 class="card-section-title">
             <span class="card-section-title-icon" aria-hidden="true">📅</span>
@@ -268,26 +263,26 @@
           </div>
 
           <!-- Daily Missions -->
-          <div class="daily-missions-section" style="margin-top: 2rem;">
-            <h3 class="card-section-title" style="margin-bottom: 1rem;">
+          <div class="daily-missions-section">
+            <h3 class="card-section-title section-title-compact">
               <span class="card-section-title-icon" aria-hidden="true">🎯</span>
               Today's Missions
             </h3>
-            
+
             {% if daily_missions %}
-              <div class="mission-list" style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="mission-list">
                 {% for mission in daily_missions %}
-                  <div class="mission-card" style="background: rgba(255, 255, 255, 0.05); border-radius: var(--radius-md); padding: 1rem; border-left: 4px solid var(--purple-500, #8b5cf6);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                      <div>
-                        <h4 style="margin: 0; font-size: 1.1rem; color: var(--text-primary);">{{ mission.title }}</h4>
-                        <p style="margin: 0.25rem 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                  <div class="mission-card dashboard-mission-card">
+                    <div class="dashboard-mission-content">
+                      <div class="dashboard-mission-copy">
+                        <h4 class="dashboard-mission-title">{{ mission.title }}</h4>
+                        <p class="dashboard-mission-description">
                           {{ mission.description }}
                         </p>
                       </div>
-                      <div style="text-align: right; font-size: 0.9rem; white-space: nowrap; padding-left: 1rem;">
-                        <span style="color: #b794f4;">⚡ {{ mission.xp_reward }}</span><br>
-                        <span style="color: #f6e05e;">💰 {{ mission.coin_reward }}</span>
+                      <div class="dashboard-mission-rewards">
+                        <span class="dashboard-mission-xp">⚡ {{ mission.xp_reward }}</span>
+                        <span class="dashboard-mission-coins">💰 {{ mission.coin_reward }}</span>
                       </div>
                     </div>
                   </div>
@@ -303,25 +298,73 @@
             {% endif %}
           </div>
 
-          <!-- Achievements -->
-          <div class="achievements-section" style="margin-top: 2rem;">
-            <h3 class="card-section-title" style="margin-bottom: 1rem;">
+          <div class="achievements-section">
+            <h3 class="card-section-title section-title-compact">
               <span class="card-section-title-icon" aria-hidden="true">🏆</span>
               Unlocked Achievements
             </h3>
-            
+
             {% if unlocked_achievements %}
-              <div class="achievement-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 1rem;">
+              <div class="achievement-grid">
                 {% for ua in unlocked_achievements %}
-                  <div class="achievement-badge" title="{{ ua.name }}: {{ ua.description }}" style="text-align: center; background: rgba(255, 255, 255, 0.05); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="font-size: 2rem;">{{ ua.icon or '🏅' }}</div>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ ua.name }}</div>
-                  </div>
+                  <article class="achievement-card" title="{{ ua.name }}: {{ ua.description }}">
+                    <div class="achievement-card-icon" aria-hidden="true">{{ ua.icon or '🏅' }}</div>
+                    <span class="achievement-tier achievement-tier--{{ ua.tier|lower }}">
+                      {% if ua.tier == 'Bronze' %}🥉 Bronze{% elif ua.tier == 'Silver' %}🥈 Silver{% elif ua.tier == 'Gold' %}🥇 Gold{% elif ua.tier == 'Platinum' %}💠 Platinum{% elif ua.tier == 'Diamond' %}💎 Diamond{% elif ua.tier == 'Legendary' %}👑 Legendary{% else %}🏅 {{ ua.tier }}{% endif %}
+                    </span>
+                    <h4 class="achievement-card-title">{{ ua.name }}</h4>
+                    <p class="achievement-card-description">{{ ua.description }}</p>
+                    <div class="achievement-rewards" aria-label="Achievement rewards">
+                      <span>⚡ {{ ua.xp_reward }} XP</span>
+                      <span>💰 {{ ua.coin_reward }} Coins</span>
+                    </div>
+                  </article>
                 {% endfor %}
               </div>
             {% else %}
-              <div class="getting-started" style="padding: 1rem; text-align: center; color: var(--text-secondary); background: rgba(255,255,255,0.02); border-radius: var(--radius-md);">
+              <div class="getting-started achievement-empty-state">
                 No achievements unlocked yet. Keep playing to earn badges!
+              </div>
+            {% endif %}
+
+            <!-- Locked Achievements Progress -->
+            <h3 class="card-section-title achievement-progress-title">
+              <span class="card-section-title-icon" aria-hidden="true">🔒</span>
+              Achievement Progress
+            </h3>
+
+            {% if locked_achievements %}
+              <div class="locked-achievements-list">
+                {% for ach in locked_achievements %}
+                  <article class="achievement-progress-card">
+                    <div class="achievement-progress-header">
+                      <div class="achievement-progress-copy">
+                        {% if ach.is_hidden %}
+                          <h4 class="achievement-progress-name">❓ Hidden Achievement</h4>
+                          <p class="achievement-progress-description">Keep playing to discover this achievement.</p>
+                        {% else %}
+                          <h4 class="achievement-progress-name">{{ ach.icon or '🏅' }} {{ ach.name }}</h4>
+                          <p class="achievement-progress-description">{{ ach.description }}</p>
+                        {% endif %}
+                        <span class="achievement-tier achievement-tier--{{ ach.tier|lower }}">
+                          {% if ach.tier == 'Bronze' %}🥉 Bronze{% elif ach.tier == 'Silver' %}🥈 Silver{% elif ach.tier == 'Gold' %}🥇 Gold{% elif ach.tier == 'Platinum' %}💠 Platinum{% elif ach.tier == 'Diamond' %}💎 Diamond{% elif ach.tier == 'Legendary' %}👑 Legendary{% else %}🏅 {{ ach.tier }}{% endif %}
+                        </span>
+                      </div>
+                      <div class="achievement-progress-value">{{ ach.current_progress }} / {{ ach.target_value }}</div>
+                    </div>
+                    <div class="achievement-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ ach.progress_percentage }}" aria-label="Achievement progress: {{ ach.progress_percentage }}%">
+                      <div class="achievement-progress-fill {% if ach.progress_percentage <= 30 %}achievement-progress-fill--low{% elif ach.progress_percentage <= 70 %}achievement-progress-fill--medium{% elif ach.progress_percentage < 100 %}achievement-progress-fill--high{% else %}achievement-progress-fill--complete{% endif %}" data-progress="{{ ach.progress_percentage }}"></div>
+                    </div>
+                    <div class="achievement-rewards" aria-label="Achievement rewards">
+                      <span>⚡ {{ ach.xp_reward }} XP</span>
+                      <span>💰 {{ ach.coin_reward }} Coins</span>
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="getting-started achievement-empty-state">
+                All achievements unlocked! Incredible!
               </div>
             {% endif %}
           </div>
