@@ -224,7 +224,7 @@ with app.app_context():
     print("  Expected: All 5 visible achievements unlocked at once")
 
     clear_user_achievements(db)
-    set_user_stats(db, missions_completed=10, current_xp=600, current_level=3,
+    set_user_stats(db, missions_completed=10, current_xp=2600, current_level=3,
                    current_streak=5, longest_streak=5)
 
     result = AchievementService.check(99)
