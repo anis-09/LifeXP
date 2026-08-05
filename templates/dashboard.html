@@ -87,15 +87,7 @@
           </div>
           <div class="stat-card-value" aria-label="Level {{ stats.current_level }}">{{ stats.current_level }}</div>
           <div class="stat-card-sub">
-            {% if stats.current_level < 10 %}
-              Apprentice Hero
-            {% elif stats.current_level < 25 %}
-              Rising Adventurer
-            {% elif stats.current_level < 50 %}
-              Seasoned Champion
-            {% else %}
-              Legendary Master
-            {% endif %}
+            {{ rank_title }}
           </div>
         </div>
 
@@ -166,15 +158,7 @@
               <div class="profile-level-badge">
                 ⭐ Level {{ stats.current_level }}
                 —
-                {% if stats.current_level < 10 %}
-                  Apprentice
-                {% elif stats.current_level < 25 %}
-                  Adventurer
-                {% elif stats.current_level < 50 %}
-                  Champion
-                {% else %}
-                  Master
-                {% endif %}
+                {{ rank_title }}
               </div>
             </div>
           </div>

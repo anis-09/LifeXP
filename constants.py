@@ -101,4 +101,46 @@ STREAK_MILESTONES = {
     7:  (50,  20),
     14: (100, 50),
     30: (200, 100),
-}
+}
+
+# -----------------------------
+# Rank System
+# -----------------------------
+
+# Maps (min_level, max_level_inclusive) -> (title, icon, color).
+# Evaluated in order — first matching range wins.
+# Import from here; never hard-code rank strings in services or templates.
+RANK_THRESHOLDS = [
+    (1,  4,  "Novice",   "🌱", "#10b981"),
+    (5,  9,  "Explorer", "🧭", "#06b6d4"),
+    (10, 19, "Warrior",  "⚔️", "#8b5cf6"),
+    (20, 34, "Champion", "🏆", "#f59e0b"),
+    (35, 49, "Master",   "👁️", "#ec4899"),
+    (50, None, "Legend", "👑", "#eab308"),
+]
+
+# -----------------------------
+# Badge Tier Display Order
+# -----------------------------
+
+# Ordered list used by ProfileService to group achievements by tier.
+# Add new tiers here — the grouping logic is fully data-driven.
+BADGE_TIER_ORDER = [
+    "bronze",
+    "silver",
+    "gold",
+    "platinum",
+    "diamond",
+    "legendary",
+]
+
+# Tier display metadata (emoji label and CSS variable name).
+BADGE_TIER_META = {
+    "bronze":    {"label": "Bronze",    "emoji": "🥉"},
+    "silver":    {"label": "Silver",    "emoji": "🥈"},
+    "gold":      {"label": "Gold",      "emoji": "🥇"},
+    "platinum":  {"label": "Platinum",  "emoji": "💎"},
+    "diamond":   {"label": "Diamond",   "emoji": "💠"},
+    "legendary": {"label": "Legendary", "emoji": "👑"},
+}
+

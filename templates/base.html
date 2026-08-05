@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/celebration.css') }}" />
 
   <!-- Page-specific CSS -->
   {% block styles %}{% endblock %}
@@ -49,6 +50,71 @@
     {% block content %}{% endblock %}
   </div>
 
+  <!-- =================================================================
+       Achievement Celebration Modal (Sprint 4.3)
+       celebration_queue is intercepted by a context processor in app.py.
+  ================================================================= -->
+  <div
+    id="celebration-root"
+    data-achievements="{{ celebration_achievements | default([]) | tojson }}"
+    aria-hidden="true"
+  ></div>
+
+  {% if celebration_achievements %}
+  <!-- Confetti canvas (behind modal) -->
+  <canvas id="celebration-confetti" aria-hidden="true"></canvas>
+
+  <!-- Backdrop + Modal -->
+  <div
+    id="celebration-backdrop"
+    class="celebration-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cel-name"
+    aria-describedby="cel-description"
+  >
+    <div id="celebration-modal" class="celebration-modal" data-tier="bronze">
+
+      <!-- Unlock label -->
+      <div class="celebration-label" aria-live="polite">Achievement Unlocked!</div>
+
+      <!-- Badge -->
+      <div class="celebration-badge-wrap">
+        <div class="celebration-badge-ring" aria-hidden="true"></div>
+        <span id="cel-badge" class="celebration-badge" aria-hidden="true">🏅</span>
+      </div>
+
+      <!-- Name + Tier -->
+      <h2 id="cel-name" class="celebration-name"></h2>
+      <span id="cel-tier-tag" class="celebration-tier-tag"></span>
+      <p id="cel-description" class="celebration-description"></p>
+
+      <!-- Rewards -->
+      <div class="celebration-rewards">
+        <div id="cel-xp-row" class="celebration-reward-pill xp">
+          ⚡ +<span id="cel-xp">0</span> XP
+        </div>
+        <div id="cel-coins-row" class="celebration-reward-pill coins">
+          💰 +<span id="cel-coins">0</span> Coins
+        </div>
+      </div>
+
+      <!-- Queue counter (e.g. "2 of 3") -->
+      <div id="cel-queue-counter" class="celebration-queue-counter"></div>
+
+      <!-- Continue button -->
+      <button id="cel-continue" class="celebration-continue" type="button">
+        Awesome!
+      </button>
+
+      <!-- Future-ready sound hooks (silent until audio files are added) -->
+      <!-- <audio id="cel-audio-legendary" src="/static/audio/legendary.mp3" preload="none"></audio> -->
+      <!-- <audio id="cel-audio-default"   src="/static/audio/unlock.mp3"    preload="none"></audio> -->
+
+    </div><!-- /celebration-modal -->
+  </div><!-- /celebration-backdrop -->
+  {% endif %}
+
   <!-- Base JS (auto-dismiss flash messages) -->
   <script>
     // Auto-dismiss flash messages after 10 seconds
@@ -63,5 +129,9 @@
   </script>
 
   {% block scripts %}{% endblock %}
+
+  {% if celebration_achievements %}
+  <script src="{{ url_for('static', filename='js/celebration.js') }}" defer></script>
+  {% endif %}
 </body>
 </html>

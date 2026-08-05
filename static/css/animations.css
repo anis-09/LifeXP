@@ -113,6 +113,46 @@
   50%       { transform: translateY(-8px); }
 }
 
+@keyframes badgePop {
+  0%   { opacity: 0; transform: scale(0.3) rotate(-15deg); }
+  60%  { opacity: 1; transform: scale(1.15) rotate(4deg); }
+  80%  { transform: scale(0.95) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes modalSlideIn {
+  0%   { opacity: 0; transform: translateY(40px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes rewardTick {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowRing {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(124,58,237,0.4), 0 0 30px rgba(124,58,237,0.2); }
+  50%       { box-shadow: 0 0 0 8px rgba(124,58,237,0.6), 0 0 60px rgba(124,58,237,0.4); }
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes tierGlow-bronze    { 0%,100% { box-shadow: 0 0 20px rgba(205,127,50,0.4);  } 50% { box-shadow: 0 0 40px rgba(205,127,50,0.7);  } }
+@keyframes tierGlow-silver    { 0%,100% { box-shadow: 0 0 20px rgba(192,192,192,0.4); } 50% { box-shadow: 0 0 40px rgba(192,192,192,0.7); } }
+@keyframes tierGlow-gold      { 0%,100% { box-shadow: 0 0 20px rgba(245,158,11,0.4);  } 50% { box-shadow: 0 0 40px rgba(245,158,11,0.8);  } }
+@keyframes tierGlow-platinum  { 0%,100% { box-shadow: 0 0 20px rgba(229,228,226,0.4); } 50% { box-shadow: 0 0 60px rgba(229,228,226,0.8); } }
+@keyframes tierGlow-diamond   { 0%,100% { box-shadow: 0 0 20px rgba(185,242,255,0.5); } 50% { box-shadow: 0 0 60px rgba(185,242,255,0.9); } }
+@keyframes tierGlow-legendary { 0%,100% { box-shadow: 0 0 30px rgba(255,215,0,0.5);   } 50% { box-shadow: 0 0 80px rgba(255,215,0,0.9), 0 0 120px rgba(255,100,0,0.4); } }
+
+
 /* ---------------------------------------------------------------------- */
 /* Utility Animation Classes                                                */
 /* ---------------------------------------------------------------------- */

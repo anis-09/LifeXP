@@ -98,6 +98,10 @@ class MissionService:
         # Mark mission completed
         MissionModel.complete(mission_id)
 
+        # Increment user's total completed missions
+        from models.user_stats import UserStatsModel
+        UserStatsModel.increment_completed_missions(user_id=user_id)
+
         reward_result = RewardService.reward_user(
             user_id=user_id,
             mission=mission

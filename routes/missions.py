@@ -12,6 +12,7 @@ from flask import (
     url_for,
     flash,
     session,
+    jsonify,
 )
 
 from models.mission_category import MissionCategoryModel
@@ -134,6 +135,12 @@ def complete(mission_id):
 
         flash("".join(parts), "success")
 
+        # Store newly unlocked achievements in session for celebration modal.
+        # Only keep fields the JS needs — avoids bloating the cookie.
+        newly_unlocked = reward.get("newly_unlocked_achievements", [])
+        if newly_unlocked:
+            session["celebration_queue"] = [ach["id"] for ach in newly_unlocked]
+
     except ValueError as error:
 
         flash(
@@ -145,7 +152,7 @@ def complete(mission_id):
         raise
 
     return redirect(
-        url_for("missions.index")
+        url_for("dashboard.index")
     )
 
 

@@ -56,9 +56,7 @@ class XPService:
             xp=amount
         )
 
-        UserStatsModel.increment_completed_missions(
-            user_id=user_id
-        )
+        # Removed UserStatsModel.increment_completed_missions
 
         stats = UserStatsModel.get(user_id)
 

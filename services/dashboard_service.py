@@ -11,6 +11,7 @@ from models.user import get_user_by_id
 from models.user_stats import UserStatsModel
 from services.daily_mission_service import DailyMissionService
 from services.achievement_service import AchievementService
+from services.rank_service import RankService
 
 
 class DashboardService:
@@ -53,8 +54,8 @@ class DashboardService:
 
         today_missions = DailyMissionService.ensure_daily_missions(user_id)
         streak_days = DashboardService._build_streak_days(stats)
-        
         achievements_data = AchievementService.get_user_achievements_with_progress(user_id)
+        rank_info = RankService.get_rank(current_level)
 
         return {
             "user": user,
@@ -76,6 +77,9 @@ class DashboardService:
 
             "unlocked_achievements": achievements_data["unlocked"],
             "locked_achievements": achievements_data["locked"],
+
+            "rank_info": rank_info,
+            "rank_title": rank_info["title"],
         }
 
     @staticmethod

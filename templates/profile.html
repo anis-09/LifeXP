@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.full_name }} — Profile · LifeXP{% endblock %}
+{% block meta_description %}{{ user.full_name }}'s LifeXP player profile — Level {{ current_level }} {{ rank_title }}. View achievement collection, statistics, and recent history.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <!-- ================================================================
+       NAVBAR (shares dashboard.css navbar classes)
+  ================================================================ -->
+  <nav class="dashboard-navbar" role="navigation" aria-label="Profile Navigation">
+    <div class="container dashboard-navbar-inner">
+
+      <!-- Logo -->
+      <a href="{{ url_for('dashboard.index') }}" class="dash-logo" aria-label="LifeXP Dashboard">
+        <div class="dash-logo-icon" aria-hidden="true">⚡</div>
+        <span class="dash-logo-text">Life<span class="highlight">XP</span></span>
+      </a>
+
+      <!-- Right side -->
+      <div class="dash-nav-right">
+        <a href="{{ url_for('dashboard.index') }}" class="profile-back-link" aria-label="Back to Dashboard">
+          ← Dashboard
+        </a>
+
+        <!-- User pill with dropdown -->
+        <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+          <div class="dash-user-avatar-small" aria-hidden="true">
+            {{ user.full_name[0].upper() }}
+          </div>
+          <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
+          <span aria-hidden="true">▾</span>
+
+          <!-- Dropdown -->
+          <div class="dash-user-dropdown" id="user-dropdown" role="menu">
+            <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">
+              👤 My Profile
+            </a>
+            <div class="divider dashboard-dropdown-divider"></div>
+            <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">
+              🚪 Logout
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ================================================================
+       MAIN CONTENT
+  ================================================================ -->
+  <main class="profile-main" id="main-content">
+    <div class="container">
+
+      <!-- ============================================================
+           HERO SECTION
+      ============================================================ -->
+      <section class="profile-hero" aria-label="Player Hero">
+
+        <!-- Avatar -->
+        <div class="profile-hero-avatar-wrap">
+          <div class="profile-hero-avatar-ring" aria-hidden="true"></div>
+          <div class="profile-hero-avatar-ring-inner" aria-hidden="true"></div>
+          <div class="profile-hero-avatar" aria-label="Player avatar">
+            {{ user.full_name[0].upper() }}
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-hero-info">
+
+          <h1 class="profile-hero-name">{{ user.full_name }}</h1>
+
+          <div class="profile-hero-rank" aria-label="Player rank">
+            <span class="profile-hero-rank-badge">Level {{ current_level }} · {{ rank_title }}</span>
+          </div>
+
+          <!-- XP Progress bar -->
+          <div class="profile-hero-xp-wrap" aria-label="XP Progress">
+            <div class="profile-hero-xp-label">
+              <span>Level {{ current_level }}</span>
+              <span>{{ xp_into_level }} / {{ xp_required_this_level }} XP</span>
+            </div>
+            <div class="profile-hero-xp-track" role="progressbar"
+                 aria-valuenow="{{ xp_progress }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 aria-label="XP progress to next level">
+              <div
+                class="profile-hero-xp-fill"
+                id="profile-xp-fill"
+                data-width="{{ xp_progress }}"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Stat pills -->
+          <div class="profile-hero-pills">
+            <div class="profile-hero-pill xp" aria-label="Total XP">
+              ⚡ {{ stats.current_xp }} XP
+            </div>
+            <div class="profile-hero-pill coins" aria-label="Coins">
+              💰 {{ stats.current_coins }} Coins
+            </div>
+            <div class="profile-hero-pill streak" aria-label="Current streak">
+              🔥 {{ stats.current_streak }}-Day Streak
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ============================================================
+           STATISTICS GRID
+      ============================================================ -->
+      <section class="profile-section" aria-labelledby="stats-heading">
+        <h2 id="stats-heading" class="profile-section-header">
+          <span class="profile-section-icon" aria-hidden="true">📊</span>
+          Statistics
+        </h2>
+
+        <div class="profile-stats-grid">
+
+          <div class="profile-stat-card" style="animation-delay: 0.05s;">
+            <div class="profile-stat-icon" aria-hidden="true">✅</div>
+            <div class="profile-stat-value" id="stat-missions">{{ stats.missions_completed }}</div>
+            <div class="profile-stat-label">Missions Completed</div>
+          </div>
+
+          <div class="profile-stat-card" style="animation-delay: 0.10s;">
+            <div class="profile-stat-icon" aria-hidden="true">🏆</div>
+            <div class="profile-stat-value"><span id="stat-achievements">{{ achievements_unlocked }}</span><span style="font-size: 0.6em; color: var(--color-text-muted);"> / {{ achievements_total }}</span></div>
+            <div class="profile-stat-label">Achievements ({{ achievements_completion_pct }}%)</div>
+          </div>
+
+          <div class="profile-stat-card" style="animation-delay: 0.15s;">
+            <div class="profile-stat-icon" aria-hidden="true">⚡</div>
+            <div class="profile-stat-value" id="stat-xp">{{ stats.current_xp }}</div>
+            <div class="profile-stat-label">Total XP</div>
+          </div>
+
+          <div class="profile-stat-card" style="animation-delay: 0.20s;">
+            <div class="profile-stat-icon" aria-hidden="true">💰</div>
+            <div class="profile-stat-value" id="stat-coins">{{ stats.current_coins }}</div>
+            <div class="profile-stat-label">Coins Earned</div>
+          </div>
+
+          <div class="profile-stat-card" style="animation-delay: 0.25s;">
+            <div class="profile-stat-icon" aria-hidden="true">🔥</div>
+            <div class="profile-stat-value" id="stat-streak">{{ stats.longest_streak }}</div>
+            <div class="profile-stat-label">Longest Streak</div>
+          </div>
+
+          <div class="profile-stat-card" style="animation-delay: 0.30s;">
+            <div class="profile-stat-icon" aria-hidden="true">⭐</div>
+            <div class="profile-stat-value" id="stat-level">{{ current_level }}</div>
+            <div class="profile-stat-label">Current Level</div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ============================================================
+           ACHIEVEMENT COLLECTION (by tier)
+      ============================================================ -->
+      <section class="profile-section profile-collection" aria-labelledby="collection-heading">
+        <h2 id="collection-heading" class="profile-section-header">
+          <span class="profile-section-icon" aria-hidden="true">🏅</span>
+          Achievement Collection
+          <span class="profile-tier-count" style="margin-left: auto; font-size: var(--font-size-sm); color: var(--color-text-muted);">
+            {{ achievements_unlocked }} earned
+          </span>
+        </h2>
+
+        {% if tier_groups %}
+          {% for group in tier_groups %}
+          <div class="profile-tier-group" style="animation-delay: {{ loop.index * 0.08 }}s;">
+            <div class="profile-tier-header">
+              <span class="profile-tier-emoji" aria-hidden="true">{{ group.meta.emoji }}</span>
+              <span class="profile-tier-label tier-{{ group.tier }}">{{ group.meta.label }}</span>
+              <span class="profile-tier-count">{{ group.items | length }}</span>
+            </div>
+            <div class="profile-achievement-grid" role="list">
+              {% for ach in group.items %}
+              <div
+                class="profile-achievement-badge tier-{{ group.tier }}"
+                role="listitem"
+                data-tooltip="{{ ach.description }}"
+                aria-label="{{ ach.name }}: {{ ach.description }}"
+              >
+                <span class="profile-achievement-icon" aria-hidden="true">{{ ach.icon or '🏅' }}</span>
+                <span class="profile-achievement-name">{{ ach.name }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+
+        {% else %}
+          <div class="profile-collection-empty" aria-live="polite">
+            <div class="profile-collection-empty-icon" aria-hidden="true">🎯</div>
+            <p>No achievements yet. Complete missions to start earning badges!</p>
+          </div>
+        {% endif %}
+      </section>
+
+
+      <!-- ============================================================
+           LOWER TWO-COLUMN GRID
+      ============================================================ -->
+      <div class="profile-lower-grid">
+
+        <!-- LEFT: Recent Timeline -->
+        <section class="profile-section profile-timeline" aria-labelledby="timeline-heading">
+          <h2 id="timeline-heading" class="profile-section-header">
+            <span class="profile-section-icon" aria-hidden="true">🕐</span>
+            Recent Achievements
+          </h2>
+
+          {% if recent_timeline %}
+          <div class="profile-timeline-list" role="list">
+            {% for ach in recent_timeline %}
+            <div class="profile-timeline-item" role="listitem" style="animation-delay: {{ loop.index * 0.06 }}s;">
+
+              <div class="profile-timeline-dot" aria-hidden="true">
+                {{ ach.icon or '🏅' }}
+              </div>
+
+              <div class="profile-timeline-content">
+                <div class="profile-timeline-name">{{ ach.name }}</div>
+                <div class="profile-timeline-meta">
+                  <span class="profile-timeline-tier-tag tier-tag-{{ ach.badge_tier or 'bronze' }}">
+                    {{ (ach.badge_tier or 'bronze') | capitalize }}
+                  </span>
+                  <span>{{ ach.unlocked_at or 'recently' }}</span>
+                </div>
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+
+          {% else %}
+          <div class="profile-timeline-empty" aria-live="polite">
+            No achievements unlocked yet.
+          </div>
+          {% endif %}
+        </section>
+
+        <!-- RIGHT: Locked Achievement Progress -->
+        <section class="profile-section profile-locked-section" aria-labelledby="locked-heading">
+          <h2 id="locked-heading" class="profile-section-header">
+            <span class="profile-section-icon" aria-hidden="true">🔒</span>
+            In Progress
+          </h2>
+
+          {% if locked_achievements %}
+          <div class="profile-locked-list" role="list">
+            {% for ach in locked_achievements %}
+            <div class="profile-progress-card" role="listitem" style="animation-delay: {{ loop.index * 0.06 }}s;">
+              <div class="profile-progress-card-header">
+                <div>
+                  <p class="profile-progress-card-name">
+                    {{ ach.icon or '🔒' }} {{ ach.name }}
+                  </p>
+                  <p class="profile-progress-card-desc">{{ ach.description }}</p>
+                </div>
+                <span class="profile-progress-card-count">
+                  {{ ach.current_value }} / {{ ach.target_value }}
+                </span>
+              </div>
+              <div class="profile-progress-bar-track"
+                   role="progressbar"
+                   aria-valuenow="{{ ach.progress_pct | int }}"
+                   aria-valuemin="0"
+                   aria-valuemax="100"
+                   aria-label="{{ ach.name }} progress">
+                <div
+                  class="profile-progress-bar-fill"
+                  data-progress="{{ ach.progress_pct }}"
+                ></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% else %}
+          <div class="profile-locked-empty" aria-live="polite">
+            🎉 You've unlocked all visible achievements!
+          </div>
+          {% endif %}
+        </section>
+
+      </div><!-- /profile-lower-grid -->
+
+    </div><!-- /container -->
+  </main>
+
+</div><!-- /profile-page -->
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+  /* Profile page JS — XP bar animation and stat count-up */
+  (function () {
+    'use strict';
+
+    /* XP bar */
+    var xpFill = document.getElementById('profile-xp-fill');
+    if (xpFill) {
+      var targetWidth = parseInt(xpFill.getAttribute('data-width'), 10) || 0;
+      setTimeout(function () {
+        xpFill.style.width = targetWidth + '%';
+      }, 400);
+    }
+
+    /* Achievement progress bars */
+    var progressBars = document.querySelectorAll('.profile-progress-bar-fill[data-progress]');
+    progressBars.forEach(function (bar) {
+      var pct = Math.max(0, Math.min(100, parseFloat(bar.getAttribute('data-progress')) || 0));
+      setTimeout(function () {
+        bar.style.width = pct + '%';
+      }, 500);
+    });
+
+    /* Stat count-up */
+    function animateCountUp(el, end, duration) {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = end;
+        return;
+      }
+      var startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        el.textContent = Math.floor(progress * end);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = end;
+      }
+      requestAnimationFrame(step);
+    }
+
+    var statIds = [
+      'stat-missions', 'stat-achievements', 'stat-xp',
+      'stat-coins', 'stat-streak', 'stat-level'
+    ];
+
+    statIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var val = parseInt(el.textContent.trim(), 10);
+      if (!isNaN(val) && val > 0) {
+        el.textContent = '0';
+        setTimeout(function () { animateCountUp(el, val, 900); }, 300);
+      }
+    });
+
+    /* User dropdown (reuse same pattern as dashboard) */
+    var pill = document.getElementById('user-pill');
+    if (pill) {
+      pill.addEventListener('click', function (e) {
+        var open = this.classList.toggle('open');
+        this.setAttribute('aria-expanded', open ? 'true' : 'false');
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function (e) {
+        if (!pill.contains(e.target)) {
+          pill.classList.remove('open');
+          pill.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+  })();
+</script>
+{% endblock %}

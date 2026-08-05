@@ -20,6 +20,7 @@ from routes.main import main_bp
 from routes.auth import auth_bp
 from routes.dashboard import dashboard_bp
 from routes.missions import missions_bp
+from routes.profile import profile_bp
 
 
 def create_app() -> Flask:
@@ -54,6 +55,28 @@ def create_app() -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(missions_bp)
+    app.register_blueprint(profile_bp)
+
+    @app.context_processor
+    def inject_celebration_queue():
+        from flask import session
+        from models.achievement import AchievementModel
+        queue_ids = session.pop("celebration_queue", [])
+        achievements = []
+        if queue_ids:
+            for ach_id in queue_ids:
+                ach = AchievementModel.get_by_id(ach_id)
+                if ach:
+                    achievements.append({
+                        "id":          ach["id"],
+                        "name":        ach["name"],
+                        "description": ach["description"],
+                        "icon":        ach.get("icon") or "🏅",
+                        "badge_tier":  ach.get("badge_tier") or "bronze",
+                        "xp_reward":   ach.get("xp_reward", 0),
+                        "coin_reward": ach.get("coin_reward", 0),
+                    })
+        return dict(celebration_achievements=achievements)
 
     return app
 
