@@ -51,7 +51,11 @@ def close_db(e=None):
 
 def initialize_database():
     """
-    Create database schema and insert default seed data.
+    Create database schema, insert default seed data, and apply any
+    migration scripts found in the migrations/ directory.
+
+    All SQL files are run with executescript which is idempotent for
+    CREATE … IF NOT EXISTS / CREATE INDEX IF NOT EXISTS statements.
     """
 
     connection = get_connection()
@@ -69,5 +73,12 @@ def initialize_database():
     with open(seed_file, "r", encoding="utf-8") as file:
         connection.executescript(file.read())
 
+    # Apply migration scripts (alphabetical order, idempotent)
+    migrations_dir = database_dir.parent / "migrations"
+    if migrations_dir.is_dir():
+        for migration_file in sorted(migrations_dir.glob("*.sql")):
+            with open(migration_file, "r", encoding="utf-8") as file:
+                connection.executescript(file.read())
+
     connection.commit()
-    connection.close()
+    connection.close()

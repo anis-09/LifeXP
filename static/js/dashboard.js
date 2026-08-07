@@ -204,4 +204,58 @@
 
   animateParticles();
 
+  /* ------------------------------------------------------------------ */
+  /* Dashboard — Daily Reward Claim Button                                */
+  /* ------------------------------------------------------------------ */
+
+  var btnDashClaim = document.getElementById('btn-dash-claim');
+
+  if (btnDashClaim) {
+    btnDashClaim.addEventListener('click', function () {
+      var self = this;
+      self.disabled = true;
+      self.textContent = '⏳ Claiming…';
+
+      fetch('/api/rewards/claim', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok, data: data };
+          });
+        })
+        .then(function (result) {
+          if (result.ok && result.data.success) {
+            // Redirect to the full rewards page so user sees the animation
+            window.location.href = '/rewards';
+          } else {
+            self.disabled = false;
+            self.textContent = '🎁 Claim!';
+            // Surface error via flash container
+            var msg = result.data.message || 'Could not claim reward.';
+            var fc = document.getElementById('flash-container');
+            if (!fc) {
+              fc = document.createElement('div');
+              fc.id = 'flash-container';
+              fc.className = 'flash-container';
+              document.body.prepend(fc);
+            }
+            var flash = document.createElement('div');
+            flash.className = 'flash flash-error';
+            flash.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:1rem;';
+            flash.innerHTML = '<div>❌ ' + msg + '</div><button onclick="this.parentElement.remove()" style="opacity:0.7;font-size:1.2rem;cursor:pointer;">&times;</button>';
+            fc.appendChild(flash);
+          }
+        })
+        .catch(function () {
+          self.disabled = false;
+          self.textContent = '🎁 Claim!';
+        });
+    });
+  }
+
 })();

@@ -21,6 +21,7 @@ from routes.auth import auth_bp
 from routes.dashboard import dashboard_bp
 from routes.missions import missions_bp
 from routes.profile import profile_bp
+from routes.rewards import rewards_bp
 
 
 def create_app() -> Flask:
@@ -56,6 +57,7 @@ def create_app() -> Flask:
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(missions_bp)
     app.register_blueprint(profile_bp)
+    app.register_blueprint(rewards_bp)
 
     @app.context_processor
     def inject_celebration_queue():

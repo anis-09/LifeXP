@@ -1,0 +1,563 @@
+/* ==========================================================================
+   static/css/rewards.css
+   Daily Rewards Page Styles — Sprint 5
+   Imports design tokens from variables.css (loaded in base.html).
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------- */
+/* Page Layout                                                              */
+/* ---------------------------------------------------------------------- */
+
+.rewards-page {
+  min-height: 100vh;
+  background: var(--gradient-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+}
+
+.rewards-main {
+  padding-top: calc(var(--navbar-height) + var(--space-8));
+  padding-bottom: var(--space-16);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Page Header                                                              */
+/* ---------------------------------------------------------------------- */
+
+.rewards-header {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.rewards-header-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: var(--space-4);
+  animation: float 3s ease-in-out infinite;
+}
+
+.rewards-header-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-3);
+  line-height: var(--line-height-tight);
+}
+
+.rewards-header-sub {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* 7-Day Reward Strip                                                       */
+/* ---------------------------------------------------------------------- */
+
+.rewards-strip-section {
+  margin-bottom: var(--space-10);
+}
+
+.rewards-strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-3);
+}
+
+.reward-strip-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  text-align: center;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  cursor: default;
+}
+
+/* Past day */
+.reward-strip-day--past {
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.reward-strip-day--past .reward-strip-day-icon {
+  color: var(--color-success);
+  font-size: 1.4rem;
+}
+
+/* Today */
+.reward-strip-day--today {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4), inset 0 0 20px rgba(124, 58, 237, 0.1);
+  background: rgba(124, 58, 237, 0.15);
+  transform: translateY(-4px) scale(1.04);
+}
+
+/* Upcoming */
+.reward-strip-day--upcoming {
+  opacity: 0.6;
+}
+
+.reward-strip-day-num {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.reward-strip-day-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.reward-strip-day-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.reward-strip-today-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gradient-brand);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Today's Reward Card                                                      */
+/* ---------------------------------------------------------------------- */
+
+.today-reward-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-12);
+}
+
+.today-reward-card {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--space-10) var(--space-8);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle animated shimmer behind card */
+.today-reward-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-brand-soft);
+  pointer-events: none;
+}
+
+.today-reward-day-badge {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-purple-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(124, 58, 237, 0.15);
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+/* Big animated reward icon */
+.today-reward-icon-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.today-reward-icon-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 70%);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.today-reward-icon {
+  font-size: 4rem;
+  position: relative;
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 16px rgba(124, 58, 237, 0.6));
+}
+
+.today-reward-name {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.today-reward-values {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reward-value-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.reward-value-pill--xp {
+  background: rgba(124, 58, 237, 0.2);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  color: var(--color-purple-light);
+}
+
+.reward-value-pill--coins {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: var(--color-gold-light);
+}
+
+.reward-value-pill--special {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: var(--color-pink);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Claim Button                                                             */
+/* ---------------------------------------------------------------------- */
+
+.reward-unclaimed-state {
+  width: 100%;
+}
+
+.btn-claim {
+  width: 100%;
+  max-width: 300px;
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-xl);
+  border: none;
+  background: var(--gradient-brand);
+  color: white;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.5);
+  transition: transform var(--transition-spring), box-shadow var(--transition-base), opacity var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-claim::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.btn-claim:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.7);
+}
+
+.btn-claim:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-claim:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-claim-icon {
+  font-size: 1.3rem;
+}
+
+/* Loading spinner state */
+.btn-claim.loading .btn-claim-icon {
+  animation: spin 1s linear infinite;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Claimed State + Countdown                                                */
+/* ---------------------------------------------------------------------- */
+
+.reward-claimed-state {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.reward-claimed-badge {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-6);
+}
+
+.reward-countdown-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.reward-countdown {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.04em;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Reward Claim Animation Overlay                                           */
+/* ---------------------------------------------------------------------- */
+
+.reward-animation-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Coin shower particles injected by JS */
+.reward-particle {
+  position: absolute;
+  font-size: 1.6rem;
+  animation: reward-particle-fall 1.2s ease-in forwards;
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes reward-particle-fall {
+  0% {
+    transform: translateY(-60px) rotate(0deg) scale(0.5);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Flash effect behind the reward card on claim */
+.today-reward-card.claimed-flash {
+  animation: card-flash 0.6s ease-out;
+}
+
+@keyframes card-flash {
+  0%   { box-shadow: 0 0 0 rgba(124, 58, 237, 0); }
+  40%  { box-shadow: 0 0 60px rgba(124, 58, 237, 0.8), 0 0 120px rgba(6, 182, 212, 0.4); }
+  100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Claim History                                                            */
+/* ---------------------------------------------------------------------- */
+
+.rewards-history-section {
+  max-width: 600px;
+  margin: 0 auto var(--space-8);
+}
+
+.rewards-history-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.rewards-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.rewards-history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--glass-blur);
+  transition: background var(--transition-fast);
+}
+
+.rewards-history-item:hover {
+  background: var(--color-surface-hover);
+}
+
+.rewards-history-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.rewards-history-info {
+  flex: 1;
+}
+
+.rewards-history-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.rewards-history-date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.rewards-history-day-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-purple-light);
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: var(--radius-full);
+  padding: 2px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rewards-history-empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.rewards-history-empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: var(--space-4);
+  opacity: 0.5;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Keyframe Animations                                                      */
+/* ---------------------------------------------------------------------- */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.12); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Responsive                                                               */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .rewards-strip {
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--space-2);
+  }
+
+  .reward-strip-day {
+    padding: var(--space-3) var(--space-1);
+  }
+
+  .reward-strip-day-label {
+    display: none; /* hide label on small screens — icon + day num suffices */
+  }
+
+  .today-reward-card {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .rewards-header-title {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .rewards-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Show only days 1–4 on very small screens; days 5–7 wrap */
+  .reward-strip-day-num {
+    font-size: 0.55rem;
+  }
+}

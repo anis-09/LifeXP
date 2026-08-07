@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Rewards — LifeXP{% endblock %}
+{% block meta_description %}Claim your daily login reward — coins, XP, chests, and more. Log in every day to advance through the 7-day reward cycle.{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/rewards.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="rewards-page">
+
+  <!-- ================================================================
+       NAVBAR (shares dashboard.css navbar classes)
+  ================================================================ -->
+  <nav class="dashboard-navbar" role="navigation" aria-label="Rewards Navigation">
+    <div class="container dashboard-navbar-inner">
+
+      <!-- Logo -->
+      <a href="{{ url_for('dashboard.index') }}" class="dash-logo" aria-label="LifeXP Dashboard">
+        <div class="dash-logo-icon" aria-hidden="true">⚡</div>
+        <span class="dash-logo-text">Life<span class="highlight">XP</span></span>
+      </a>
+
+      <!-- Right side -->
+      <div class="dash-nav-right">
+        <a href="{{ url_for('dashboard.index') }}" class="profile-back-link" aria-label="Back to Dashboard">
+          ← Dashboard
+        </a>
+
+        <!-- User pill with dropdown -->
+        <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+          <div class="dash-user-avatar-small" aria-hidden="true">
+            {{ session.get('user_name', 'U')[0].upper() }}
+          </div>
+          <span class="dash-user-name-small">Rewards</span>
+          <span aria-hidden="true">▾</span>
+
+          <!-- Dropdown -->
+          <div class="dash-user-dropdown" id="user-dropdown" role="menu">
+            <a href="{{ url_for('dashboard.index') }}" class="dropdown-item" role="menuitem">🏠 Dashboard</a>
+            <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">👤 My Profile</a>
+            <div class="divider dashboard-dropdown-divider"></div>
+            <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">🚪 Logout</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ================================================================
+       MAIN CONTENT
+  ================================================================ -->
+  <main class="rewards-main" id="main-content">
+    <div class="container">
+
+      <!-- ---- Page Header ----------------------------------------- -->
+      <section class="rewards-header animate-fade-in-up" aria-label="Daily Rewards Header">
+        <div class="rewards-header-icon" aria-hidden="true">🎁</div>
+        <h1 class="rewards-header-title">Daily Rewards</h1>
+        <p class="rewards-header-sub">
+          Log in every day to collect your reward. Complete the 7-day cycle for epic bonuses!
+        </p>
+      </section>
+
+
+      <!-- ---- 7-Day Reward Strip ----------------------------------- -->
+      <section class="rewards-strip-section animate-fade-in-up" aria-label="7-Day Reward Cycle">
+        <div class="rewards-strip" role="list" aria-label="7-day reward strip">
+          {% for day in status.schedule %}
+            <div
+              class="reward-strip-day reward-strip-day--{{ day.state }}"
+              role="listitem"
+              aria-label="Day {{ day.day_number }}: {{ day.label }}{% if day.state == 'today' %} (today){% elif day.state == 'past' %} (collected){% endif %}"
+            >
+              <div class="reward-strip-day-num">Day {{ day.day_number }}</div>
+              <div class="reward-strip-day-icon" aria-hidden="true">
+                {% if day.state == 'past' %}✓{% else %}{{ day.icon }}{% endif %}
+              </div>
+              <div class="reward-strip-day-label">{{ day.label }}</div>
+              {% if day.state == 'today' %}
+                <div class="reward-strip-today-badge" aria-hidden="true">TODAY</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+
+
+      <!-- ---- Today's Reward Card ---------------------------------- -->
+      <section class="today-reward-section animate-fade-in-up" aria-label="Today's Reward">
+
+        <article
+          class="today-reward-card glass-card"
+          id="today-reward-card"
+          aria-label="Today's daily reward"
+        >
+          <!-- Day badge -->
+          <div class="today-reward-day-badge" aria-label="Day {{ status.day_number }} of 7">
+            Day {{ status.day_number }} of 7
+          </div>
+
+          <!-- Big reward icon -->
+          <div class="today-reward-icon-wrap" aria-hidden="true">
+            <div class="today-reward-icon-glow"></div>
+            <div class="today-reward-icon" id="reward-icon">{{ status.reward.icon }}</div>
+          </div>
+
+          <!-- Reward name -->
+          <h2 class="today-reward-name" id="reward-label">{{ status.reward.label }}</h2>
+
+          <!-- Reward values -->
+          <div class="today-reward-values" aria-label="Reward values">
+            {% if status.reward.xp_value > 0 %}
+              <div class="reward-value-pill reward-value-pill--xp">
+                ⚡ +{{ status.reward.xp_value }} XP
+              </div>
+            {% endif %}
+            {% if status.reward.coin_value > 0 %}
+              <div class="reward-value-pill reward-value-pill--coins">
+                💰 +{{ status.reward.coin_value }} Coins
+              </div>
+            {% endif %}
+            {% if status.reward.type == 'avatar_item' %}
+              <div class="reward-value-pill reward-value-pill--special">
+                🎁 Exclusive Avatar Item
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Claim / Claimed state -->
+          {% if status.claimed %}
+            <!-- Already claimed -->
+            <div class="reward-claimed-state" id="reward-claimed-state" aria-live="polite">
+              <div class="reward-claimed-badge">✅ Claimed!</div>
+              <p class="reward-countdown-label">Next reward in</p>
+              <div
+                class="reward-countdown"
+                id="reward-countdown"
+                data-seconds="{{ status.seconds_until_next }}"
+                aria-label="Time until next reward"
+              >--:--:--</div>
+            </div>
+          {% else %}
+            <!-- Unclaimed -->
+            <div class="reward-unclaimed-state" id="reward-unclaimed-state">
+              <button
+                class="btn-claim"
+                id="btn-claim"
+                type="button"
+                aria-label="Claim today's {{ status.reward.label }} reward"
+              >
+                <span class="btn-claim-icon" aria-hidden="true">🎁</span>
+                Claim Reward
+              </button>
+            </div>
+
+            <!-- Hidden countdown (shown after claim) -->
+            <div class="reward-claimed-state" id="reward-claimed-state" style="display:none;" aria-live="polite">
+              <div class="reward-claimed-badge">✅ Claimed!</div>
+              <p class="reward-countdown-label">Next reward in</p>
+              <div
+                class="reward-countdown"
+                id="reward-countdown"
+                data-seconds="{{ status.seconds_until_next }}"
+                aria-label="Time until next reward"
+              >--:--:--</div>
+            </div>
+          {% endif %}
+
+        </article>
+
+        <!-- Reward animation overlay (injected by JS) -->
+        <div id="reward-animation-overlay" class="reward-animation-overlay" aria-hidden="true"></div>
+
+      </section>
+
+
+      <!-- ---- Recent Claims History ------------------------------- -->
+      <section class="rewards-history-section animate-fade-in-up" aria-label="Recent Claim History">
+        <h2 class="rewards-history-title">
+          <span aria-hidden="true">📜</span> Claim History
+        </h2>
+
+        {% if recent_claims %}
+          <div class="rewards-history-list" role="list">
+            {% for claim in recent_claims %}
+              <div class="rewards-history-item" role="listitem">
+                <div class="rewards-history-icon" aria-hidden="true">{{ claim.icon }}</div>
+                <div class="rewards-history-info">
+                  <div class="rewards-history-label">{{ claim.label }}</div>
+                  <div class="rewards-history-date">Day {{ claim.day_number }} &nbsp;·&nbsp; {{ claim.claimed_at[:10] if claim.claimed_at else 'Unknown' }}</div>
+                </div>
+                <div class="rewards-history-day-badge">Day {{ claim.day_number }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="rewards-history-empty">
+            <div class="rewards-history-empty-icon" aria-hidden="true">📦</div>
+            <p>No rewards claimed yet. Claim your first reward above!</p>
+          </div>
+        {% endif %}
+
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+</div><!-- /rewards-page -->
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/rewards.js') }}"></script>
+{% endblock %}

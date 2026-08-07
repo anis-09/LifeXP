@@ -143,4 +143,76 @@ BADGE_TIER_META = {
     "diamond":   {"label": "Diamond",   "emoji": "💠"},
     "legendary": {"label": "Legendary", "emoji": "👑"},
 }
-
+
+# -----------------------------
+# Daily Reward Schedule
+# -----------------------------
+
+# 7-day rotating daily login reward cycle (repeats after Day 7).
+# reward_type values:
+#   "coins"       — award coin_value coins immediately
+#   "xp"          — award xp_value XP immediately
+#   "chest"       — award coin_value coins + xp_value XP immediately
+#                   (full chest-opening mechanic deferred to Phase 7)
+#   "xp_bonus"    — award xp_value XP immediately
+#                   (duration-based XP boosters deferred to Phase 7)
+#   "avatar_item" — record in DB; no physical item granted until Phase 7
+# Never hard-code these values in services — always import from here.
+DAILY_REWARD_SCHEDULE = {
+    1: {
+        "type":       "coins",
+        "xp_value":   0,
+        "coin_value": 20,
+        "label":      "20 Coins",
+        "icon":       "💰",
+        "color":      "--color-gold",
+    },
+    2: {
+        "type":       "xp",
+        "xp_value":   50,
+        "coin_value": 0,
+        "label":      "50 XP",
+        "icon":       "⚡",
+        "color":      "--color-purple",
+    },
+    3: {
+        "type":       "chest",
+        "xp_value":   20,
+        "coin_value": 30,
+        "label":      "Common Chest",
+        "icon":       "📦",
+        "color":      "--color-cyan",
+    },
+    4: {
+        "type":       "avatar_item",
+        "xp_value":   0,
+        "coin_value": 0,
+        "label":      "Avatar Item",
+        "icon":       "🎁",
+        "color":      "--color-pink",
+    },
+    5: {
+        "type":       "coins",
+        "xp_value":   0,
+        "coin_value": 50,
+        "label":      "50 Coins",
+        "icon":       "💰",
+        "color":      "--color-gold",
+    },
+    6: {
+        "type":       "xp_bonus",
+        "xp_value":   100,
+        "coin_value": 0,
+        "label":      "XP Bonus",
+        "icon":       "🚀",
+        "color":      "--color-purple",
+    },
+    7: {
+        "type":       "chest",
+        "xp_value":   200,
+        "coin_value": 100,
+        "label":      "Epic Chest",
+        "icon":       "🏆",
+        "color":      "--color-gold",
+    },
+}
