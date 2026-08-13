@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Guide - LifeXP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 2rem;">
+  <div class="glass-panel" style="padding: 2rem;">
+    <h1 style="color: var(--accent-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+      <span class="icon">📖</span> LifeXP Guide
+    </h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Welcome to the official LifeXP guide! Here is everything you need to know about leveling up your life.</p>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">1. Missions & Quests</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Missions are your daily and weekly tasks. Completing them grants XP (Experience Points) and Coins.</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;"><strong>Daily Missions:</strong> Refresh every day. Perfect for habits.</li>
+      <li style="margin-bottom: 0.5rem;"><strong>One-time Missions:</strong> Specific goals or large projects.</li>
+      <li style="margin-bottom: 0.5rem;"><strong>Difficulty:</strong> Harder missions yield more XP and Coins.</li>
+    </ul>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">2. XP, Levels, and Coins</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">As you complete missions, you gain XP. Collect enough XP to Level Up!</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;"><strong>Leveling Up:</strong> Showcases your overall progress in LifeXP.</li>
+      <li style="margin-bottom: 0.5rem;"><strong>Coins:</strong> Earned along with XP, Coins can be used to unlock premium avatars or rewards (future features).</li>
+    </ul>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">3. Daily Streaks</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Consistency is key. Logging in and completing tasks builds your streak.</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;"><strong>Login Rewards:</strong> Log in every day to claim bonus XP and Coins!</li>
+      <li style="margin-bottom: 0.5rem;"><strong>Streak Multipliers:</strong> Higher streaks grant larger daily bonuses.</li>
+    </ul>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">4. Achievements</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Special milestones in your journey will unlock Achievements, displayed on your Profile.</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;">Earn achievements by completing your first mission, reaching level milestones, or maintaining a long streak.</li>
+    </ul>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">5. Leaderboard</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Compete with the entire LifeXP community.</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;"><strong>Global:</strong> Ranks everyone by all-time XP and Level.</li>
+      <li style="margin-bottom: 0.5rem;"><strong>Weekly:</strong> Resets every week. Who can earn the most XP this week?</li>
+    </ul>
+
+    <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem;">6. Nova AI Coach</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Your personal companion on the Dashboard.</p>
+    <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="margin-bottom: 0.5rem;">Nova provides contextual advice based on your current missions, streak, level, and the time of day.</li>
+    </ul>
+
+    <div style="margin-top: 3rem; text-align: center;">
+      <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem; font-weight: 600;">Go to Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

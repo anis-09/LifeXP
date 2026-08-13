@@ -18,10 +18,11 @@ from __future__ import annotations
 from typing import Dict, List
 
 from constants import BADGE_TIER_ORDER, BADGE_TIER_META, XP_PER_LEVEL
-from models.user import get_user_by_id
+from models.user import get_user_by_id, update_profile
 from models.user_achievement import UserAchievementModel
 from models.user_stats import UserStatsModel
 from models.achievement import AchievementModel
+from models.mission import MissionModel
 from services.achievement_service import AchievementService
 from services.rank_service import RankService
 
@@ -41,6 +42,10 @@ class ProfileService:
         user = get_user_by_id(user_id)
         if not user:
             return None
+
+        # Determine if avatar is SVG/emoji or fallback
+        # In case we need to pass this flag, but we can just use the avatar string in the template.
+
 
         stats = UserStatsModel.get(user_id)
         if not stats:
@@ -83,6 +88,9 @@ class ProfileService:
         achievements_total = len(AchievementModel.get_visible())
         achievements_completion_pct = int((achievements_unlocked / achievements_total) * 100) if achievements_total > 0 else 0
 
+        # Recent completed missions
+        recent_missions = MissionModel.get_completed_by_user(user_id, limit=5)
+
         return {
             "user":                  user,
             "stats":                 stats,
@@ -106,7 +114,25 @@ class ProfileService:
             "achievements_unlocked": achievements_unlocked,
             "achievements_total":    achievements_total,
             "achievements_completion_pct": achievements_completion_pct,
+            
+            # Missions
+            "recent_missions":       recent_missions,
         }
+
+    @staticmethod
+    def update_user_profile(user_id: int, full_name: str, avatar: str) -> None:
+        """
+        Validate and update the user's profile information.
+        """
+        full_name = full_name.strip()
+        avatar = avatar.strip()
+        
+        if not full_name:
+            raise ValueError("Name cannot be empty.")
+        if len(full_name) > 50:
+            raise ValueError("Name is too long.")
+            
+        update_profile(user_id, full_name, avatar)
 
     # ------------------------------------------------------------------
     # Private helpers

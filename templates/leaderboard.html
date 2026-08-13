@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard — LifeXP{% endblock %}
+{% block meta_description %}See how you stack up against the competition on the LifeXP leaderboard.{% endblock %}
+
+{% block styles %}
+  <!-- Reusing dashboard navbar styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="leaderboard-page">
+
+  <!-- ================================================================
+       NAVBAR (shares dashboard.css navbar classes)
+  ================================================================ -->
+  <nav class="dashboard-navbar" role="navigation" aria-label="Leaderboard Navigation">
+    <div class="container dashboard-navbar-inner">
+
+      <!-- Logo -->
+      <a href="{{ url_for('dashboard.index') }}" class="dash-logo" aria-label="LifeXP Dashboard">
+        <div class="dash-logo-icon" aria-hidden="true">⚡</div>
+        <span class="dash-logo-text">Life<span class="highlight">XP</span></span>
+      </a>
+
+      <!-- Right side -->
+      <div class="dash-nav-right">
+        <!-- Notification Bell -->
+        <div class="notification-bell-container" id="notification-bell-container" aria-label="Notifications" role="button" tabindex="0">
+          <span class="notification-icon" aria-hidden="true">🔔</span>
+          <span class="notification-badge hidden" id="notification-badge">0</span>
+          
+          <div class="notification-dropdown" id="notification-dropdown" role="menu">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button class="notification-mark-read-all" id="notification-mark-read-all">Mark all read</button>
+            </div>
+            <ul class="notification-list" id="notification-list"></ul>
+          </div>
+        </div>
+
+        <a href="{{ url_for('dashboard.index') }}" class="profile-back-link" aria-label="Back to Dashboard">
+          ← Dashboard
+        </a>
+
+        <!-- User pill with dropdown -->
+        <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+          <div class="dash-user-avatar-small" aria-hidden="true">
+            {% if session.get('user_avatar') and session.get('user_avatar') != 'default.png' %}
+              <img src="{{ url_for('static', filename='images/avatars/' + session.get('user_avatar')) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ session.get('user_name', 'U')[0].upper() }}
+            {% endif %}
+          </div>
+          <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
+          <span aria-hidden="true">▾</span>
+
+          <!-- Dropdown -->
+          <div class="dash-user-dropdown" id="user-dropdown" role="menu">
+            <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">
+              <span class="icon">👤</span> My Profile
+            </a>
+            <a href="{{ url_for('main.help_guide') }}" class="dropdown-item" role="menuitem">
+              <span class="icon">📖</span> Guide
+            </a>
+            <a href="{{ url_for('leaderboard.index') }}" class="dropdown-item" role="menuitem">
+              🏆 Leaderboard
+            </a>
+            <a href="{{ url_for('rewards.index') }}" class="dropdown-item" role="menuitem">
+              🎁 Daily Rewards
+            </a>
+            <div class="divider dashboard-dropdown-divider"></div>
+            <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">
+              🚪 Logout
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================================================================
+       MAIN CONTENT
+  ================================================================ -->
+  <main class="container">
+    
+    <header class="leaderboard-header animate-fade-in-up">
+      <h1 class="leaderboard-title">
+        <span class="leaderboard-title-icon" aria-hidden="true">🏆</span>
+        Hall of Fame
+      </h1>
+      <p class="leaderboard-subtitle">Compete with players worldwide and rise to the top.</p>
+    </header>
+
+    <nav class="leaderboard-tabs animate-fade-in-up" style="animation-delay: 0.1s;">
+      <a href="{{ url_for('leaderboard.index', period='global') }}" class="tab-link {% if period == 'global' %}active{% endif %}">Global</a>
+      <a href="{{ url_for('leaderboard.index', period='weekly') }}" class="tab-link {% if period == 'weekly' %}active{% endif %}">Weekly</a>
+      <a href="{{ url_for('leaderboard.index', period='monthly') }}" class="tab-link {% if period == 'monthly' %}active{% endif %}">Monthly</a>
+      <a href="{{ url_for('leaderboard.index', period='friends') }}" class="tab-link {% if period == 'friends' %}active{% endif %}">Friends</a>
+    </nav>
+
+    {% if period == 'friends' %}
+      <div class="coming-soon-card glass-card animate-fade-in-up" style="animation-delay: 0.2s;">
+        <span class="coming-soon-icon" aria-hidden="true">🤝</span>
+        <h2 class="coming-soon-title">Friends Leaderboard</h2>
+        <div class="coming-soon-label" style="color: var(--color-primary); font-weight: bold; margin-bottom: 1rem;">Coming Soon</div>
+        <p class="coming-soon-text">
+          Build your LifeXP network to compete with friends.<br>
+          Soon you'll be able to invite your friends and see who levels up fastest!
+        </p>
+      </div>
+    {% else %}
+      
+      {% if top_players %}
+        <div class="leaderboard-list">
+          {% for p in top_players %}
+            <article class="leaderboard-row glass-card animate-fade-in-up {% if p.user_id == user.id %}highlight-me{% endif %}" style="animation-delay: {{ 0.1 + (loop.index * 0.05) }}s;">
+              
+              <div class="rank-badge rank-{{ p.rank }}">
+                {% if p.rank == 1 %}🥇
+                {% elif p.rank == 2 %}🥈
+                {% elif p.rank == 3 %}🥉
+                {% else %}#{{ p.rank }}
+                {% endif %}
+              </div>
+
+              <div class="player-info">
+                <div class="player-avatar" style="overflow: hidden;">
+                  {% if p.avatar and p.avatar != 'default.png' %}
+                    <img src="{{ url_for('static', filename='images/avatars/' + p.avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                  {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" aria-hidden="true">
+                      {{ p.full_name[0].upper() }}
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="player-name">
+                  {{ p.full_name }}
+                  {% if p.user_id == user.id %}
+                    <span class="player-me-badge">You</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="player-stats">
+                <div class="stat-item">
+                  <span class="stat-value xp">{{ p.xp }}</span>
+                  <span class="stat-label">XP</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value level">{{ p.level }}</span>
+                  <span class="stat-label">Level</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value streak">{{ p.streak }}</span>
+                  <span class="stat-label">Streak</span>
+                </div>
+              </div>
+
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="coming-soon-card glass-card animate-fade-in-up" style="animation-delay: 0.2s;">
+          <span class="coming-soon-icon" aria-hidden="true">🚀</span>
+          <h2 class="coming-soon-title">No Players Yet</h2>
+          <p class="coming-soon-text">
+            Be the first to earn XP in this period and claim the top spot!
+          </p>
+        </div>
+      {% endif %}
+
+      <!-- Sticky Current User Row if not in top N -->
+      {% if user_rank_row and not user_in_top %}
+        <article class="leaderboard-row glass-card my-rank-sticky highlight-me">
+          <div class="rank-badge">
+            {% if user_rank_row.rank == '-' %}-{% else %}#{{ user_rank_row.rank }}{% endif %}
+          </div>
+          
+          <div class="player-info">
+            <div class="player-avatar" style="overflow: hidden;">
+              {% if user_rank_row.avatar and user_rank_row.avatar != 'default.png' %}
+                <img src="{{ url_for('static', filename='images/avatars/' + user_rank_row.avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+              {% else %}
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" aria-hidden="true">
+                  {{ user_rank_row.full_name[0].upper() }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="player-name">
+              {{ user_rank_row.full_name }}
+              <span class="player-me-badge">You</span>
+            </div>
+          </div>
+
+          <div class="player-stats">
+            <div class="stat-item">
+              <span class="stat-value xp">{{ user_rank_row.xp }}</span>
+              <span class="stat-label">XP</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value level">{{ user_rank_row.level }}</span>
+              <span class="stat-label">Level</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value streak">{{ user_rank_row.streak }}</span>
+              <span class="stat-label">Streak</span>
+            </div>
+          </div>
+        </article>
+      {% endif %}
+
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    'use strict';
+    /* User dropdown */
+    var pill = document.getElementById('user-pill');
+    if (pill) {
+      pill.addEventListener('click', function (e) {
+        var open = this.classList.toggle('open');
+        this.setAttribute('aria-expanded', open ? 'true' : 'false');
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function (e) {
+        if (!pill.contains(e.target)) {
+          pill.classList.remove('open');
+          pill.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+  })();
+</script>
+{% endblock %}

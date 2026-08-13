@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/celebration.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}" />
 
   <!-- Page-specific CSS -->
   {% block styles %}{% endblock %}
@@ -89,6 +90,7 @@
       <span id="cel-tier-tag" class="celebration-tier-tag"></span>
       <p id="cel-description" class="celebration-description"></p>
 
+
       <!-- Rewards -->
       <div class="celebration-rewards">
         <div id="cel-xp-row" class="celebration-reward-pill xp">
@@ -129,6 +131,8 @@
   </script>
 
   {% block scripts %}{% endblock %}
+
+  <script src="{{ url_for('static', filename='js/notifications.js') }}" defer></script>
 
   {% if celebration_achievements %}
   <script src="{{ url_for('static', filename='js/celebration.js') }}" defer></script>

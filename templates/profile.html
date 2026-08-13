@@ -25,6 +25,20 @@
 
       <!-- Right side -->
       <div class="dash-nav-right">
+        <!-- Notification Bell -->
+        <div class="notification-bell-container" id="notification-bell-container" aria-label="Notifications" role="button" tabindex="0">
+          <span class="notification-icon" aria-hidden="true">🔔</span>
+          <span class="notification-badge hidden" id="notification-badge">0</span>
+          
+          <div class="notification-dropdown" id="notification-dropdown" role="menu">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button class="notification-mark-read-all" id="notification-mark-read-all">Mark all read</button>
+            </div>
+            <ul class="notification-list" id="notification-list"></ul>
+          </div>
+        </div>
+
         <a href="{{ url_for('dashboard.index') }}" class="profile-back-link" aria-label="Back to Dashboard">
           ← Dashboard
         </a>
@@ -32,7 +46,11 @@
         <!-- User pill with dropdown -->
         <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
           <div class="dash-user-avatar-small" aria-hidden="true">
-            {{ user.full_name[0].upper() }}
+            {% if session.get('user_avatar') and session.get('user_avatar') != 'default.png' %}
+              <img src="{{ url_for('static', filename='images/avatars/' + session.get('user_avatar')) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ session.get('user_name', 'U')[0].upper() }}
+            {% endif %}
           </div>
           <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
           <span aria-hidden="true">▾</span>
@@ -40,7 +58,13 @@
           <!-- Dropdown -->
           <div class="dash-user-dropdown" id="user-dropdown" role="menu">
             <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">
-              👤 My Profile
+              <span class="icon">👤</span> My Profile
+            </a>
+            <a href="{{ url_for('main.help_guide') }}" class="dropdown-item" role="menuitem">
+              <span class="icon">📖</span> Guide
+            </a>
+            <a href="{{ url_for('leaderboard.index') }}" class="dropdown-item" role="menuitem">
+              🏆 Leaderboard
             </a>
             <a href="{{ url_for('rewards.index') }}" class="dropdown-item" role="menuitem">
               🎁 Daily Rewards
@@ -72,15 +96,24 @@
         <div class="profile-hero-avatar-wrap">
           <div class="profile-hero-avatar-ring" aria-hidden="true"></div>
           <div class="profile-hero-avatar-ring-inner" aria-hidden="true"></div>
-          <div class="profile-hero-avatar" aria-label="Player avatar">
-            {{ user.full_name[0].upper() }}
+          <div class="profile-hero-avatar" aria-label="Player avatar" style="overflow: hidden;">
+            {% if user.avatar and user.avatar != 'default.png' %}
+              <img src="{{ url_for('static', filename='images/avatars/' + user.avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+              <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" aria-hidden="true">
+                {{ user.full_name[0].upper() }}
+              </div>
+            {% endif %}
           </div>
         </div>
 
         <!-- Info -->
         <div class="profile-hero-info">
-
-          <h1 class="profile-hero-name">{{ user.full_name }}</h1>
+          
+          <div class="profile-hero-name-row" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <h1 class="profile-hero-name" style="margin-bottom: 0;">{{ user.full_name }}</h1>
+            <button id="edit-profile-btn" class="edit-profile-btn" aria-label="Edit Profile">✏️ Edit Profile</button>
+          </div>
 
           <div class="profile-hero-rank" aria-label="Player rank">
             <span class="profile-hero-rank-badge">Level {{ current_level }} · {{ rank_title }}</span>
@@ -172,6 +205,46 @@
         </div>
       </section>
 
+      <!-- ============================================================
+           MISSION HISTORY (RECENT MISSIONS)
+      ============================================================ -->
+      <section class="profile-section profile-timeline" aria-labelledby="mission-history-heading">
+        <h2 id="mission-history-heading" class="profile-section-header">
+          <span class="profile-section-icon" aria-hidden="true">📜</span>
+          Recent Missions
+        </h2>
+
+        {% if recent_missions %}
+        <div class="profile-timeline-list" role="list">
+          {% for mission in recent_missions %}
+          <div class="profile-timeline-item" role="listitem" style="animation-delay: {{ loop.index * 0.06 }}s;">
+            <div class="profile-timeline-dot" aria-hidden="true">
+              {{ mission.icon or '🎯' }}
+            </div>
+            <div class="profile-timeline-content">
+              <div class="profile-timeline-name">{{ mission.title }}</div>
+              <div class="profile-timeline-meta">
+                <span class="profile-timeline-tier-tag tier-tag-gold">
+                  +{{ mission.xp_reward }} XP
+                </span>
+                <span class="profile-timeline-tier-tag tier-tag-silver">
+                  +{{ mission.coin_reward }} Coins
+                </span>
+                <span class="profile-timeline-date" style="margin-left: 1rem; color: var(--color-text-muted); font-size: 0.85rem;">
+                  {{ mission.completed_at }}
+                </span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+          <div class="profile-collection-empty" aria-live="polite">
+            <div class="profile-collection-empty-icon" aria-hidden="true">⏳</div>
+            <p>No missions completed yet. Time to start your journey!</p>
+          </div>
+        {% endif %}
+      </section>
 
       <!-- ============================================================
            ACHIEVEMENT COLLECTION (by tier)
@@ -279,18 +352,18 @@
                   <p class="profile-progress-card-desc">{{ ach.description }}</p>
                 </div>
                 <span class="profile-progress-card-count">
-                  {{ ach.current_value }} / {{ ach.target_value }}
+                  {{ ach.current_progress }} / {{ ach.target_value }}
                 </span>
               </div>
               <div class="profile-progress-bar-track"
                    role="progressbar"
-                   aria-valuenow="{{ ach.progress_pct | int }}"
+                   aria-valuenow="{{ ach.progress_percentage | int }}"
                    aria-valuemin="0"
                    aria-valuemax="100"
                    aria-label="{{ ach.name }} progress">
                 <div
                   class="profile-progress-bar-fill"
-                  data-progress="{{ ach.progress_pct }}"
+                  data-progress="{{ ach.progress_percentage }}"
                 ></div>
               </div>
             </div>
@@ -308,6 +381,43 @@
 
     </div><!-- /container -->
   </main>
+
+  <!-- ============================================================
+       EDIT PROFILE MODAL
+  ============================================================ -->
+  <div id="edit-profile-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
+    <div class="modal-container glass-panel">
+      <div class="modal-header">
+        <h2 id="edit-profile-title">Edit Profile</h2>
+        <button id="close-modal-btn" class="close-btn" aria-label="Close modal">×</button>
+      </div>
+      
+      <form action="{{ url_for('profile.edit_profile') }}" method="POST" id="edit-profile-form">
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" required maxlength="50" class="glass-input">
+        </div>
+        
+        <div class="form-group">
+          <label>Select Avatar</label>
+          <div class="avatar-selection-grid" role="radiogroup" aria-label="Avatar Selection">
+            {% set avatars = ['default', 'warrior', 'mage', 'ranger', 'knight', 'ninja', 'noble', 'explorer', 'artificer', 'scholar'] %}
+            {% for av in avatars %}
+            <label class="avatar-option">
+              <input type="radio" name="avatar" value="{{ av }}.svg" {% if user.avatar == av ~ '.svg' or (user.avatar == 'default.png' and av == 'default') %}checked{% endif %} class="visually-hidden">
+              <img src="{{ url_for('static', filename='images/avatars/' + av + '.svg') }}" alt="{{ av | capitalize }} Avatar" class="avatar-preview">
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-modal-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 </div><!-- /profile-page -->
 {% endblock %}
@@ -384,6 +494,33 @@
         }
       });
     }
+
+    /* Edit Profile Modal Logic */
+    var editBtn = document.getElementById('edit-profile-btn');
+    var modal = document.getElementById('edit-profile-modal');
+    var closeBtn = document.getElementById('close-modal-btn');
+    var cancelBtn = document.getElementById('cancel-modal-btn');
+
+    function openModal() {
+      modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('visible');
+    }
+
+    function closeModal() {
+      modal.setAttribute('aria-hidden', 'true');
+      modal.classList.remove('visible');
+    }
+
+    if (editBtn) editBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    // Close on click outside
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
 
   })();
 </script>

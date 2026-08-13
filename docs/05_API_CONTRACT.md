@@ -140,6 +140,25 @@ Returns
 
 ---
 
+POST
+
+/profile/edit
+
+Body (Form Data)
+
+- full_name
+- avatar
+
+Success
+
+302 Redirect to /profile with success flash
+
+Errors
+
+302 Redirect to /profile with error flash (Validation)
+
+---
+
 # Dashboard
 
 GET
@@ -259,6 +278,47 @@ Claim reward
 Rules
 
 One claim per day
+
+---
+
+# Leaderboard
+
+GET
+
+/api/leaderboard
+
+Query Parameters
+
+- period (optional): global, weekly, monthly, friends
+
+Returns
+
+{
+    "period": "global",
+    "top_players": [
+        {
+            "rank": 1,
+            "user_id": 1,
+            "full_name": "Player 1",
+            "avatar": "default.png",
+            "xp": 1500,
+            "level": 3,
+            "streak": 5
+        }
+    ],
+    "user_rank_row": {
+        "rank": 17,
+        "user_id": 42,
+        "full_name": "Current Player",
+        "avatar": "default.png",
+        "xp": 500,
+        "level": 2,
+        "streak": 1
+    },
+    "user_in_top": false
+}
+
+Note: The current implementation renders this data directly via the `/leaderboard` route (SSR).
 
 ---
 

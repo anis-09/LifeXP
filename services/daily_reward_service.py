@@ -24,6 +24,7 @@ from typing import Dict, List, Optional
 from constants import DAILY_REWARD_SCHEDULE
 from database.db import get_db
 from services.reward_service import RewardService
+from services.notification_service import NotificationService
 
 logger = logging.getLogger(__name__)
 
@@ -137,6 +138,20 @@ class DailyRewardService:
         logger.info(
             "User %s claimed Day %s reward: %s (+%s XP, +%s Coins).",
             user_id, day_number, reward["label"], xp_granted, coins_granted,
+        )
+
+        # Trigger Notification
+        reward_text = []
+        if xp_granted > 0:
+            reward_text.append(f"{xp_granted} XP")
+        if coins_granted > 0:
+            reward_text.append(f"{coins_granted} Coins")
+        
+        NotificationService.create(
+            user_id=user_id,
+            title="Daily Reward Claimed",
+            message=f"You claimed your Day {day_number} reward: {' and '.join(reward_text)}!",
+            notif_type="Success"
         )
 
         return {

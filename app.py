@@ -22,6 +22,8 @@ from routes.dashboard import dashboard_bp
 from routes.missions import missions_bp
 from routes.profile import profile_bp
 from routes.rewards import rewards_bp
+from routes.leaderboard import leaderboard_bp
+from routes.notifications import notifications_bp
 
 
 def create_app() -> Flask:
@@ -58,6 +60,18 @@ def create_app() -> Flask:
     app.register_blueprint(missions_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(rewards_bp)
+    app.register_blueprint(leaderboard_bp)
+    app.register_blueprint(notifications_bp)
+
+    # --------------------------------------------------
+    # Security Headers
+    # --------------------------------------------------
+    @app.after_request
+    def add_security_headers(response):
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        return response
 
     @app.context_processor
     def inject_celebration_queue():
@@ -89,10 +103,10 @@ def create_app() -> Flask:
 
 initialize_database()
 
-app = create_app()
-
 
 if __name__ == "__main__":
+    print("WARNING: This is a development server. For production, please run 'python wsgi.py'.")
+    app = create_app()
     app.run(
         debug=True,
         host="0.0.0.0",

@@ -41,12 +41,12 @@ check("XP_PER_LEVEL defined in constants.py", XP_PER_LEVEL == 1000)
 from services.xp_service import XPService
 check("XPService.XP_PER_LEVEL class attr removed", not hasattr(XPService, "XP_PER_LEVEL"))
 
-dashboard_src = open("routes/dashboard.py").read()
-check("dashboard.py uses import not local def", "from constants import XP_PER_LEVEL" in dashboard_src)
-check("dashboard.py has no local XP_PER_LEVEL =", "XP_PER_LEVEL = 1000" not in dashboard_src)
+dashboard_src = open("services/dashboard_service.py").read()
+check("dashboard_service.py uses import not local def", "from constants import XP_PER_LEVEL" in dashboard_src)
+check("dashboard_service.py has no local XP_PER_LEVEL =", "XP_PER_LEVEL = 1000" not in dashboard_src)
 
-xp_src = open("services/xp_service.py").read()
-check("xp_service.py uses import not local def", "from constants import XP_PER_LEVEL" in xp_src)
+xp_src = open("services/level_service.py").read()
+check("level_service.py uses import not local def", "from constants import XP_PER_LEVEL" in xp_src)
 
 # ──────────────────────────────────────────
 # CRIT-3: delete_mission signature + ownership
@@ -112,7 +112,7 @@ print()
 if errors:
     print(f"FAILED ({len(errors)} checks):")
     for e in errors:
-        print(f"  ✗ {e}")
+        print(f"  [X] {e}")
     sys.exit(1)
 else:
-    print("All checks passed. ✓")
+    print("All checks passed. [OK]")

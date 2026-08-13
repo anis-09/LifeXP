@@ -5,6 +5,7 @@
 
 {% block styles %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nova.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -25,13 +26,30 @@
 
       <!-- Right side -->
       <div class="dash-nav-right">
+        <!-- Notification Bell -->
+        <div class="notification-bell-container" id="notification-bell-container" aria-label="Notifications" role="button" tabindex="0">
+          <span class="notification-icon" aria-hidden="true">🔔</span>
+          <span class="notification-badge hidden" id="notification-badge">0</span>
+          
+          <div class="notification-dropdown" id="notification-dropdown" role="menu">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button class="notification-mark-read-all" id="notification-mark-read-all">Mark all read</button>
+            </div>
+            <ul class="notification-list" id="notification-list"></ul>
+          </div>
+        </div>
+
         <!-- Current date -->
         <div class="dash-date" aria-label="Today's date">📅 {{ today }}</div>
 
-        <!-- User pill with dropdown -->
         <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
           <div class="dash-user-avatar-small" aria-hidden="true">
-            {{ user.full_name[0].upper() }}
+            {% if user.avatar and user.avatar != 'default.png' %}
+              <img src="{{ url_for('static', filename='images/avatars/' + user.avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ user.full_name[0].upper() }}
+            {% endif %}
           </div>
           <span class="dash-user-name-small">{{ user.full_name.split()[0] }}</span>
           <span aria-hidden="true">▾</span>
@@ -39,7 +57,13 @@
           <!-- Dropdown -->
           <div class="dash-user-dropdown" id="user-dropdown" role="menu">
             <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">
-              👤 My Profile
+              <span class="icon">👤</span> My Profile
+            </a>
+            <a href="{{ url_for('main.help_guide') }}" class="dropdown-item" role="menuitem">
+              <span class="icon">📖</span> Guide
+            </a>
+            <a href="{{ url_for('leaderboard.index') }}" class="dropdown-item" role="menuitem">
+              🏆 Leaderboard
             </a>
             <a href="{{ url_for('rewards.index') }}" class="dropdown-item" role="menuitem">
               🎁 Daily Rewards
@@ -75,6 +99,24 @@
           Today is <strong>{{ today }}</strong>. Keep pushing — your next level awaits.
         </p>
       </section>
+
+      <!-- ---- Nova AI Coach Widget ---------------------------------- -->
+      {% if nova_message %}
+      <section class="nova-widget animate-fade-in-up" aria-label="Nova AI Coach">
+        <div class="nova-icon-container">
+          {{ nova_message.icon }}
+        </div>
+        <div class="nova-content">
+          <div class="nova-header">
+            <h2 class="nova-title">Nova AI Coach</h2>
+          </div>
+          <p class="nova-message">{{ nova_message.message }}</p>
+        </div>
+        <div class="nova-cta">
+          <a href="{{ nova_message.cta_link }}" class="btn-nova">{{ nova_message.cta_text }}</a>
+        </div>
+      </section>
+      {% endif %}
 
 
       <!-- ---- Top Stats Row ------------------------------------------ -->

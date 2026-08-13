@@ -13,6 +13,7 @@ from services.daily_mission_service import DailyMissionService
 from services.achievement_service import AchievementService
 from services.daily_reward_service import DailyRewardService
 from services.rank_service import RankService
+from services.nova_service import NovaService
 
 
 class DashboardService:
@@ -58,6 +59,8 @@ class DashboardService:
         achievements_data = AchievementService.get_user_achievements_with_progress(user_id)
         rank_info = RankService.get_rank(current_level)
         daily_reward_status = DailyRewardService.get_reward_status(user_id)
+        
+        nova_message = NovaService.generate_daily_coaching(user_id, stats, today_missions)
 
         return {
             "user": user,
@@ -85,6 +88,9 @@ class DashboardService:
 
             # Daily reward card data
             "daily_reward_status": daily_reward_status,
+            
+            # Nova AI Coach data
+            "nova_message": nova_message,
         }
 
     @staticmethod

@@ -62,6 +62,7 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             session['user_name'] = user['full_name']
+            session['user_avatar'] = user['avatar']
             session.permanent = True
             return redirect(url_for('dashboard.index'))
         else:

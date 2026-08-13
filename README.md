@@ -91,92 +91,27 @@ LifeXP/
 
 ---
 
-## 🎮 Module 1 — Features Implemented
+## 🎮 Modules Implemented (v1.0)
 
-| Feature | Status |
-|---------|--------|
-| Landing Page (Hero, Features, How It Works, CTA, Footer) | ✅ |
-| User Registration (Full Name, Email, Password, Confirm Password) | ✅ |
-| Strong Password Validation (client + server) | ✅ |
-| Password Hashing (pbkdf2:sha256) | ✅ |
-| Duplicate Email Prevention | ✅ |
-| User Login with Flask Session | ✅ |
-| Logout | ✅ |
-| Dashboard (Level, XP, Coins, Streak, Date) | ✅ |
-| Real data from SQLite — no fake data | ✅ |
-| Mobile-First Responsive Design | ✅ |
-| Glassmorphism UI | ✅ |
-| Poppins Font | ✅ |
-| Smooth Animations | ✅ |
-| SQL Injection Protection (parameterised queries) | ✅ |
-| XSS Protection (Jinja2 auto-escaping) | ✅ |
-
----
-
-## 🛡️ Security
-
-- **Password hashing**: Werkzeug `pbkdf2:sha256` with 16-byte salt
-- **SQL Injection**: All queries use parameterised placeholders (`?`)
-- **XSS**: Jinja2 auto-escaping on all user data
-- **Session security**: `HttpOnly`, `SameSite=Lax`, 7-day expiry
-- **Input validation**: Both client-side (JS) and server-side (Python)
-
----
-
-## 🎨 Design System
-
-| Token | Value |
-|-------|-------|
-| Background | `#0a0a0f` |
-| Brand Purple | `#7c3aed` |
-| Brand Cyan | `#06b6d4` |
-| Gold | `#f59e0b` |
-| Font | Poppins (Google Fonts) |
-| Border Radius | 16–24px (rounded cards) |
-| Effect | Glassmorphism (`backdrop-filter: blur(20px)`) |
-
----
-
-## 🔑 Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SECRET_KEY` | Auto-generated | Flask session secret key |
-
-For production, set `SECRET_KEY` as a persistent environment variable:
-
-```bash
-export SECRET_KEY="your-super-secret-key-here"
-```
-
----
-
-## 🧩 Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Backend | Python 3 + Flask |
-| Database | SQLite (via sqlite3 stdlib) |
-| Frontend | HTML5 + CSS3 + Vanilla JavaScript |
-| Templating | Jinja2 |
-| Password Hashing | Werkzeug |
-
----
-
-## 📋 Dependencies
-
-```
-Flask==3.0.3
-Werkzeug==3.0.3
-```
+LifeXP v1.0 includes the following core features:
+- **Authentication**: Secure Login, Registration, Password Hashing.
+- **Dashboard**: Real-time stats, current progress, active quests.
+- **Missions**: Daily auto-refreshing tasks and one-time epic quests.
+- **Rewards**: Earn XP and Coins, Daily Login Streaks.
+- **Achievements**: Unlock badges for milestones (Level, XP, Streaks).
+- **Leaderboard**: Compete globally and weekly with other heroes.
+- **Profile**: Customize your premium RPG avatar and view history.
+- **Notifications**: Real-time alerts for level-ups and milestones.
+- **Nova AI Coach**: Rule-based deterministic coaching engine.
+- **Production Ready**: Secured with strict HTTP headers and Waitress WSGI.
 
 ---
 
 ## 🗺️ Roadmap
 
-> **Module 1** (current) — Landing, Register, Login, Dashboard
+> **Version 1.0** (Current) — Core Game Loop, Leaderboard, AI Coach
 >
-> Upcoming modules: Missions, Rewards, Profile, Leaderboard, AI Coach, Friends, Shop, Settings
+> Upcoming versions (v2.0+): Friends & Social, Premium Shop, Advanced Customization, Habit Tracking.
 
 ---
 

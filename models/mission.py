@@ -212,3 +212,27 @@ class MissionModel:
         ).fetchone()
 
         return result["total"]
+
+    @staticmethod
+    def get_completed_by_user(user_id, limit=5):
+        """
+        Return the most recently completed missions by a specific user.
+        """
+        db = get_db()
+        
+        return db.execute(
+            """
+            SELECT
+                missions.*,
+                mission_categories.name AS category_name,
+                mission_categories.icon,
+                mission_categories.color
+            FROM missions
+            INNER JOIN mission_categories
+                ON mission_categories.id = missions.category_id
+            WHERE missions.created_by = ? AND missions.is_completed = 1
+            ORDER BY missions.completed_at DESC
+            LIMIT ?
+            """,
+            (user_id, limit)
+        ).fetchall()

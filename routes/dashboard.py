@@ -13,6 +13,7 @@ from flask import (
 )
 
 from services.dashboard_service import DashboardService
+from services.notification_service import NotificationService
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -35,6 +36,9 @@ def index():
     if dashboard_data is None:
         session.clear()
         return redirect(url_for("auth.login"))
+
+    # Trigger a mission reminder if applicable
+    NotificationService.create_mission_reminder_if_needed(session["user_id"])
 
     return render_template(
         "dashboard.html",

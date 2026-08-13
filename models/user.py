@@ -66,3 +66,17 @@ def update_last_login(user_id: int) -> None:
         (user_id,)
     )
     db.commit()
+
+
+def update_profile(user_id: int, full_name: str, avatar: str) -> None:
+    """Update the user's full name and avatar."""
+    db = get_db()
+    db.execute(
+        """
+        UPDATE users 
+        SET full_name = ?, avatar = ? 
+        WHERE id = ?
+        """,
+        (full_name.strip(), avatar.strip(), user_id)
+    )
+    db.commit()

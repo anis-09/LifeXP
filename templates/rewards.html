@@ -25,6 +25,20 @@
 
       <!-- Right side -->
       <div class="dash-nav-right">
+        <!-- Notification Bell -->
+        <div class="notification-bell-container" id="notification-bell-container" aria-label="Notifications" role="button" tabindex="0">
+          <span class="notification-icon" aria-hidden="true">🔔</span>
+          <span class="notification-badge hidden" id="notification-badge">0</span>
+          
+          <div class="notification-dropdown" id="notification-dropdown" role="menu">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <button class="notification-mark-read-all" id="notification-mark-read-all">Mark all read</button>
+            </div>
+            <ul class="notification-list" id="notification-list"></ul>
+          </div>
+        </div>
+
         <a href="{{ url_for('dashboard.index') }}" class="profile-back-link" aria-label="Back to Dashboard">
           ← Dashboard
         </a>
@@ -32,7 +46,11 @@
         <!-- User pill with dropdown -->
         <div class="dash-user-pill" id="user-pill" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
           <div class="dash-user-avatar-small" aria-hidden="true">
-            {{ session.get('user_name', 'U')[0].upper() }}
+            {% if session.get('user_avatar') and session.get('user_avatar') != 'default.png' %}
+              <img src="{{ url_for('static', filename='images/avatars/' + session.get('user_avatar')) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ session.get('user_name', 'U')[0].upper() }}
+            {% endif %}
           </div>
           <span class="dash-user-name-small">Rewards</span>
           <span aria-hidden="true">▾</span>
@@ -41,6 +59,8 @@
           <div class="dash-user-dropdown" id="user-dropdown" role="menu">
             <a href="{{ url_for('dashboard.index') }}" class="dropdown-item" role="menuitem">🏠 Dashboard</a>
             <a href="{{ url_for('profile.index') }}" class="dropdown-item" role="menuitem">👤 My Profile</a>
+            <a href="{{ url_for('main.help_guide') }}" class="dropdown-item" role="menuitem">📖 Guide</a>
+            <a href="{{ url_for('leaderboard.index') }}" class="dropdown-item" role="menuitem">🏆 Leaderboard</a>
             <div class="divider dashboard-dropdown-divider"></div>
             <a href="{{ url_for('auth.logout') }}" class="dropdown-item danger" role="menuitem" id="logout-btn">🚪 Logout</a>
           </div>
