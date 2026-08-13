@@ -1,13 +1,46 @@
 import logging
+import datetime
 from database.db import get_db
+from config import FIRESTORE_NOTIFICATIONS_ENABLED
+from firebase_admin import firestore
+from services.firebase_service import get_firestore_client, format_firestore_timestamp, FirebaseConfigurationError
 
 class NotificationService:
 
     @staticmethod
+    def _get_fs():
+        try:
+            return get_firestore_client()
+        except FirebaseConfigurationError as e:
+            logging.error(f"Firestore disabled due to config error: {e}")
+            return None
+
+    @staticmethod
     def create(user_id, title, message, notif_type="Info"):
         """
-        Creates a new persistent notification in the database.
+        Creates a new persistent notification in the database (SQLite or Firestore).
         """
+        if FIRESTORE_NOTIFICATIONS_ENABLED:
+            fs = NotificationService._get_fs()
+            if fs:
+                try:
+                    uid = f"sqlite_{user_id}"
+                    ref = fs.collection("users").document(uid).collection("notifications").document()
+                    data = {
+                        "title": title,
+                        "message": message,
+                        "type": notif_type,
+                        "is_read": False,
+                        "created_at": firestore.SERVER_TIMESTAMP
+                    }
+                    ref.set(data)
+                    return True
+                except Exception as e:
+                    logging.error(f"Error creating notification in Firestore: {e}")
+                    # Fallback to SQLite is not implemented for individual writes to avoid split-brain
+                    return False
+        
+        # SQLite fallback/default
         try:
             db = get_db()
             db.execute(
@@ -20,7 +53,7 @@ class NotificationService:
             db.commit()
             return True
         except Exception as e:
-            logging.error(f"Error creating notification: {e}")
+            logging.error(f"Error creating notification in SQLite: {e}")
             return False
 
     @staticmethod
@@ -28,6 +61,32 @@ class NotificationService:
         """
         Retrieves all unread notifications for a user, ordered by newest first.
         """
+        if FIRESTORE_NOTIFICATIONS_ENABLED:
+            fs = NotificationService._get_fs()
+            if fs:
+                try:
+                    uid = f"sqlite_{user_id}"
+                    docs = fs.collection("users").document(uid).collection("notifications") \
+                             .where(filter=firestore.FieldFilter("is_read", "==", False)) \
+                             .order_by("created_at", direction=firestore.Query.DESCENDING) \
+                             .stream()
+                    
+                    results = []
+                    for doc in docs:
+                        data = doc.to_dict()
+                        results.append({
+                            "id": doc.id,
+                            "title": data.get("title", ""),
+                            "message": data.get("message", ""),
+                            "type": data.get("type", "Info"),
+                            "created_at": format_firestore_timestamp(data.get("created_at"))
+                        })
+                    return results
+                except Exception as e:
+                    logging.error(f"Error fetching notifications from Firestore: {e}")
+                    return []
+
+        # SQLite fallback/default
         try:
             db = get_db()
             return db.execute(
@@ -40,7 +99,7 @@ class NotificationService:
                 (user_id,)
             ).fetchall()
         except Exception as e:
-            logging.error(f"Error fetching notifications: {e}")
+            logging.error(f"Error fetching notifications from SQLite: {e}")
             return []
 
     @staticmethod
@@ -48,6 +107,36 @@ class NotificationService:
         """
         Marks a specific notification as read, or all if notification_id is None.
         """
+        if FIRESTORE_NOTIFICATIONS_ENABLED:
+            fs = NotificationService._get_fs()
+            if fs:
+                try:
+                    uid = f"sqlite_{user_id}"
+                    coll_ref = fs.collection("users").document(uid).collection("notifications")
+                    
+                    if notification_id:
+                        # Depending on migration format, old notifications might have string IDs like "sqlite_notif_1"
+                        coll_ref.document(str(notification_id)).update({"is_read": True})
+                    else:
+                        # Mark all unread as read (batched)
+                        docs = coll_ref.where(filter=firestore.FieldFilter("is_read", "==", False)).stream()
+                        batch = fs.batch()
+                        count = 0
+                        for doc in docs:
+                            batch.update(doc.reference, {"is_read": True})
+                            count += 1
+                            if count >= 500:
+                                batch.commit()
+                                batch = fs.batch()
+                                count = 0
+                        if count > 0:
+                            batch.commit()
+                    return True
+                except Exception as e:
+                    logging.error(f"Error marking notification(s) as read in Firestore: {e}")
+                    return False
+
+        # SQLite fallback/default
         try:
             db = get_db()
             if notification_id:
@@ -63,7 +152,7 @@ class NotificationService:
             db.commit()
             return True
         except Exception as e:
-            logging.error(f"Error marking notification(s) as read: {e}")
+            logging.error(f"Error marking notification(s) as read in SQLite: {e}")
             return False
 
     @staticmethod
@@ -74,7 +163,7 @@ class NotificationService:
         """
         try:
             db = get_db()
-            # Check if there are incomplete daily missions for today
+            # 1. ALWAYS query user_missions from SQLite (not migrated to Firestore reads yet)
             incomplete_dailies = db.execute(
                 '''
                 SELECT um.id 
@@ -92,7 +181,42 @@ class NotificationService:
             if not incomplete_dailies:
                 return False
 
-            # Check if a reminder was already created today
+            # 2. Check existence of today's reminder
+            if FIRESTORE_NOTIFICATIONS_ENABLED:
+                fs = NotificationService._get_fs()
+                if fs:
+                    uid = f"sqlite_{user_id}"
+                    
+                    # Compute start of today in UTC for comparison if needed, 
+                    # but since server timestamp is UTC, let's just do a basic check
+                    # To avoid complex timezone queries on Firestore, we can query last 10 and filter,
+                    # or strictly use a where clause if indexed.
+                    # Since it's a simple app, let's query the latest reminder notification.
+                    docs = fs.collection("users").document(uid).collection("notifications") \
+                             .where(filter=firestore.FieldFilter("title", "==", "Daily Mission Reminder")) \
+                             .order_by("created_at", direction=firestore.Query.DESCENDING) \
+                             .limit(1) \
+                             .stream()
+                    
+                    has_recent = False
+                    for doc in docs:
+                        dt = doc.to_dict().get("created_at")
+                        # Check if dt is today
+                        if dt and dt.date() == datetime.datetime.now(datetime.timezone.utc).date():
+                            has_recent = True
+                    
+                    if has_recent:
+                        return False
+                    
+                    # Create the reminder in Firestore
+                    return NotificationService.create(
+                        user_id=user_id,
+                        title="Daily Mission Reminder",
+                        message="You have incomplete daily missions. Don't break your streak!",
+                        notif_type="Warning"
+                    )
+
+            # 2.b SQLite fallback existence check
             existing_reminder = db.execute(
                 '''
                 SELECT id 

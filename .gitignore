@@ -1,49 +1,39 @@
-# ======================================================
-# Python
-# ======================================================
+# 1. OS Files
+.DS_Store
+Thumbs.db
+
+# 2. Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-
-# ======================================================
-# Virtual Environment
-# ======================================================
 venv/
 .venv/
 env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# ======================================================
-# IDEs
-# ======================================================
+# 3. Environment & Secrets
+.env
+.env.*
+!.env.example
+*.json
+firebase-credentials.json
+firebase-credentials-*.json
+
+# 4. IDEs
 .vscode/
 .idea/
 
-# ======================================================
-# Environment Variables
-# ======================================================
-.env
-.env.*
-
-# ======================================================
-# Logs
-# ======================================================
+# 5. Logs & Temp
 *.log
+*.tmp
+*.temp
 
-# ======================================================
-# OS Files
-# ======================================================
-.DS_Store
-Thumbs.db
-
-# ======================================================
-# Flask
-# ======================================================
-instance/
-
-# ======================================================
-# Databases
-# ======================================================
+# 6. Database
 database.db
 database/database.db
 *.sqlite
@@ -51,32 +41,15 @@ database/database.db
 *.db
 *.bak
 
-# ======================================================
-# Automated Test Artifacts
-# ======================================================
-.playwright-mcp/
-.pytest_cache/
-.coverage
-htmlcov/
-mission_complete_result.png
+# 7. Flask
+instance/
 
-# ======================================================
-# Temporary Development / Debugging Scripts
-# ======================================================
+# 8. QA Scripts
 inspect_db.py
 migrate_achievement_schema.py
 qa_http_check.py
 seed_achievements.py
-
-# ======================================================
-# Python Test Cache
-# ======================================================
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-
-# ======================================================
-# Misc
-# ======================================================
-*.tmp
-*.temp
+qa_sprint5_rewards.py
+reset_test_pw.py
+.playwright-mcp/
+mission_complete_result.png

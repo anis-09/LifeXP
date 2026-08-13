@@ -5,6 +5,11 @@ XP Transaction Model
 """
 
 from database.db import get_db
+from config import FIRESTORE_USER_STATS_ENABLED
+
+def get_fs():
+    from services.firebase_service import get_firestore_client
+    return get_firestore_client()
 
 
 class XPTransactionModel:
@@ -22,6 +27,17 @@ class XPTransactionModel:
         """
         Create an XP transaction.
         """
+        if FIRESTORE_USER_STATS_ENABLED:
+            from firebase_admin import firestore
+            doc_ref = get_fs().collection("users").document(f"sqlite_{user_id}").collection("transactions").document()
+            doc_ref.set({
+                "currency_type": "xp",
+                "source": source,
+                "reference_id": reference_id,
+                "amount": amount,
+                "created_at": firestore.SERVER_TIMESTAMP
+            })
+            return
 
         db = get_db()
 
@@ -54,6 +70,12 @@ class XPTransactionModel:
         """
         Return all XP transactions for a user.
         """
+        if FIRESTORE_USER_STATS_ENABLED:
+            from firebase_admin import firestore
+            txs = get_fs().collection("users").document(f"sqlite_{user_id}").collection("transactions")\
+                .where(filter=firestore.FieldFilter("currency_type", "==", "xp"))\
+                .order_by("created_at", direction=firestore.Query.DESCENDING).get()
+            return [tx.to_dict() for tx in txs]
 
         db = get_db()
 

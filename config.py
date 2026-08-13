@@ -53,3 +53,20 @@ MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 DEFAULT_THEME = "dark"
 
 DEFAULT_LANGUAGE = "en"
+
+# --------------------------------------------------
+# Firebase (Phase 1 foundation only)
+# --------------------------------------------------
+
+# Firebase remains optional while LifeXP continues to use SQLite.  Keep the
+# service-account key outside source control and provide its path via the
+# environment when running locally.
+FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID", "")
+FIREBASE_CREDENTIALS_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
+
+# --------------------------------------------------
+# Feature Flags
+# --------------------------------------------------
+
+FIRESTORE_NOTIFICATIONS_ENABLED = os.environ.get("FIRESTORE_NOTIFICATIONS_ENABLED", "false").lower() == "true"
+FIRESTORE_USER_STATS_ENABLED = os.environ.get("FIRESTORE_USER_STATS_ENABLED", "false").lower() == "true"

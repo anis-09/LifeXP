@@ -37,9 +37,11 @@ class LeaderboardService:
             # Format to SQLite timestamp string format
             start_date_str = f"{start_of_week.isoformat()} 00:00:00"
             end_date_str = f"{end_of_week.isoformat()} 23:59:59"
+            year, week, _ = start_of_week.isocalendar()
+            period_key = f"weekly_xp_{year}_{week}"
             
-            top_players = LeaderboardModel.get_period_leaderboard(start_date_str, end_date_str, limit)
-            user_rank_row = LeaderboardModel.get_user_period_rank(user_id, start_date_str, end_date_str)
+            top_players = LeaderboardModel.get_period_leaderboard(start_date_str, end_date_str, limit, period_key=period_key)
+            user_rank_row = LeaderboardModel.get_user_period_rank(user_id, start_date_str, end_date_str, period_key=period_key)
             
         elif period == "monthly":
             start_of_month = today.replace(day=1)
@@ -49,9 +51,10 @@ class LeaderboardService:
             
             start_date_str = f"{start_of_month.isoformat()} 00:00:00"
             end_date_str = f"{end_of_month.isoformat()} 23:59:59"
+            period_key = f"monthly_xp_{start_of_month.year}_{start_of_month.month:02d}"
             
-            top_players = LeaderboardModel.get_period_leaderboard(start_date_str, end_date_str, limit)
-            user_rank_row = LeaderboardModel.get_user_period_rank(user_id, start_date_str, end_date_str)
+            top_players = LeaderboardModel.get_period_leaderboard(start_date_str, end_date_str, limit, period_key=period_key)
+            user_rank_row = LeaderboardModel.get_user_period_rank(user_id, start_date_str, end_date_str, period_key=period_key)
             
         elif period == "friends":
             top_players = []
