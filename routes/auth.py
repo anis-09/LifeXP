@@ -4,7 +4,16 @@ routes/auth.py
 Blueprint handling registration, login, and logout routes.
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    flash,
+    make_response,
+)
 from services.auth_service import register_user, login_user
 
 auth_bp = Blueprint('auth', __name__)
@@ -33,7 +42,10 @@ def register():
 
         if success:
             flash('Account created! Please log in.', 'success')
-            return redirect(url_for('auth.login'))
+            response = make_response(redirect(url_for("auth.login")))
+            response.delete_cookie("fcm_token")
+            return response
+
         else:
             error = message
 
@@ -76,4 +88,6 @@ def logout():
     """Clear session and redirect to landing page."""
     session.clear()
     flash('You have been logged out.', 'info')
-    return redirect(url_for('main.landing'))
+    response = make_response(redirect(url_for('main.index')))
+    response.delete_cookie("fcm_token")
+    return response

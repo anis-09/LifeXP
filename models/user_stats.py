@@ -58,6 +58,7 @@ class UserStatsModel:
                 "last_activity_date": None,
                 "missions_completed": 0,
                 "missions_failed": 0,
+                "total_daily_claims": 0,
                 "full_name": user["full_name"] if user else "",
                 "avatar": user["avatar"] if user else "default.png",
                 "last_updated": datetime.datetime.utcnow()
