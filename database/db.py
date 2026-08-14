@@ -80,5 +80,41 @@ def initialize_database():
             with open(migration_file, "r", encoding="utf-8") as file:
                 connection.executescript(file.read())
 
+    # ---------------------------------------------------------------
+    # Idempotent column-level migrations
+    # These use Python guards (PRAGMA table_info) to safely ADD COLUMN
+    # without failing on repeated runs.  SQLite does not support
+    # ALTER TABLE ADD COLUMN IF NOT EXISTS, so this pattern is required.
+    # ---------------------------------------------------------------
+
+    _apply_column_migrations(connection)
+
     connection.commit()
-    connection.close()
+    connection.close()
+
+
+def _apply_column_migrations(connection: sqlite3.Connection) -> None:
+    """
+    Apply idempotent ALTER TABLE ADD COLUMN migrations.
+
+    Each entry is a (table, column, column_definition) tuple.
+    The column is added only if it does not already exist.
+    """
+
+    column_migrations = [
+        # Added in migrate_last_activity_date.py (standalone script).
+        # Required by DashboardService._build_streak_days() and
+        # UserStatsModel.update_streak().
+        ("user_stats", "last_activity_date", "DATE"),
+    ]
+
+    for table, column, definition in column_migrations:
+        existing = [
+            row[1]
+            for row in connection.execute(f"PRAGMA table_info({table})").fetchall()
+        ]
+        if column not in existing:
+            connection.execute(
+                f"ALTER TABLE {table} ADD COLUMN {column} {definition}"
+            )
+            connection.commit()
